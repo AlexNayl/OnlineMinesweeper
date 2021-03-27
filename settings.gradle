@@ -1,0 +1,3 @@
+rootProject.name = 'groupProject'
+include 'client'
+include 'server'
