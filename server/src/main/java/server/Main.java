@@ -11,7 +11,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Server");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
     }
@@ -19,5 +19,10 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void stop(){
+        System.exit(0);        //Forces the server thread to stop when the window closes
     }
 }
