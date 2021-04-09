@@ -53,7 +53,7 @@ public class Controller {
 	}
 
 	public void hard(ActionEvent action) {
-		int demention = 50
+		int demention = 50;
 		MineSweeper board = new MineSweeper(demention);
 		easy.setVisible(false);
 		medium.setVisible(false);
