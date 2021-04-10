@@ -30,24 +30,34 @@ public class ClientInstance implements Runnable{
 	 * Intended to be ran as a thread only.
 	 */
 	public void run(){
-		if(socket == null || !socket.isConnected()){
-			//No connection, do not run
-			System.err.println("Client attempted to run without valid socket.");
+		if(!connectAndTest()){
+			//Connection failed
 			terminate();
 			return;
 		}
+		System.out.println("Server-Client connection successfully established");
+		terminate();
+	}
 
+	/**
+	 * shuts down the socket and lets the thread stop
+	 */
+	public void terminate(){
+		try {
+			socket.close();
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+	}
+
+	/**
+	 * Sets up input streams for new connection, then verifies game client using "Challenge, Response, Acknowledge"
+	 * @return connection successful
+	 */
+	private boolean connectAndTest(){
 		try {
 			inputStream = new Scanner( socket.getInputStream() );
 			outputStream = new PrintWriter( socket.getOutputStream() );
-		}catch(Exception exception) {
-			exception.printStackTrace();
-			terminate();
-			return;
-		}
-
-		//Verify we're talking to an actual game client
-		try {
 			socket.setSoTimeout( 500 );
 			String challenge = "";
 			if(inputStream.hasNext()) {
@@ -61,7 +71,7 @@ public class ClientInstance implements Runnable{
 				//Invalid challenge
 				System.err.println("Invalid challenge or no challenge issued");
 				terminate();
-				return;
+				return false;
 			}
 			//Check for acknowledgment
 			if(inputStream.hasNext()){
@@ -69,7 +79,7 @@ public class ClientInstance implements Runnable{
 			}else{
 				System.err.println("Failed to acknowledge");
 				terminate();
-				return;
+				return false;
 			}
 			socket.setSoTimeout( 0 );
 
@@ -77,23 +87,9 @@ public class ClientInstance implements Runnable{
 			//No response
 			exception.printStackTrace();
 			terminate();
-			return;
+			return false;
 		}
 
-		System.out.println("Server-Client connection successfully established");
-
-		terminate();
-
-	}
-
-	/**
-	 * shuts down the socket and lets the thread stop
-	 */
-	public void terminate(){
-		try {
-			socket.close();
-		}catch(Exception exception){
-			exception.printStackTrace();
-		}
+		return true;
 	}
 }
