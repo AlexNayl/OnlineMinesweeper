@@ -26,5 +26,5 @@ hs_err_pid*
 build/
 
 #gradle and intellij config
-.idea/
-.gradle/
+**/.idea/
+**/.gradle/
