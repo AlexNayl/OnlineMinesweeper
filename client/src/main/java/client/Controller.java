@@ -29,11 +29,11 @@ public class Controller {
 	private Button button;
 
 	public void handleConnect(){
-		connectionManager = new ConnectionManager( ip, port );
+		connectionManager = ConnectionManager.getInstance();
+		connectionManager.setConnection( ip, port );
 		connectionManagerThread = new Thread(connectionManager);
 		connectionManagerThread.start();
 		connectionManager.setThread( connectionManagerThread );
-		Main.setConnectionManager( connectionManager );
 	}
 
 	public void handleSendTestCommand(){

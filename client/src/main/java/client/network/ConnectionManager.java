@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 public class ConnectionManager implements Runnable{
 
+	private static ConnectionManager selfInstance;		//Singleton instance
+
 	//Used to verify we're talking to an actual game server
 	private final String CHALLENGE = "!aiF!hFs3c785cS6";
 	private final String REPLY = "ky&skcHgSB@65x5q";
@@ -24,12 +26,27 @@ public class ConnectionManager implements Runnable{
 	//Stored in its own object for easy retrieval, doable since we expect only one thread;
 	Thread selfThread;
 
+	private ConnectionManager(){
+		//Forces singleton
+	}
+
 	/**
-	 * Constructs a new connection manager
+	 * gets the singleton instance of the connection manager
+	 * @return
+	 */
+	public static ConnectionManager getInstance(){
+		if(selfInstance == null){
+			selfInstance = new ConnectionManager();
+		}
+		return selfInstance;
+	}
+
+	/**
+	 * sets the port and ip to connect to
 	 * @param ip Address of server your connecting too
 	 * @param port Port of server your connecting too
 	 */
-	public ConnectionManager(String ip, int port){
+	public void setConnection(String ip, int port){
 		this.ip = ip;
 		this.port = port;
 	}
