@@ -14,6 +14,7 @@ public class ClientInstance implements Runnable{
 	private final String REPLY = "ky&skcHgSB@65x5q";
 
 	Socket socket = null;
+	int clientId = -1;
 
 	Scanner inputStream;
 	PrintWriter outputStream;
@@ -21,21 +22,26 @@ public class ClientInstance implements Runnable{
 	/**
 	 * Constructs a new ClientInstance bound to the specified socket.
 	 * @param socket
+	 * @param clientID unique integer given to each client
 	 */
-	ClientInstance( Socket socket){
+	ClientInstance( Socket socket, int clientID){
 		this.socket = socket;
+		this.clientId = clientID;
 	}
 
 	/**
 	 * Intended to be ran as a thread only.
 	 */
 	public void run(){
+		System.out.println("Client " + clientId + " connected.");
 		if(!connectAndTest()){
 			//Connection failed
 			terminate();
 			return;
 		}
-		System.out.println("Server-Client connection successfully established");
+
+		//TODO: listen for commands
+
 		terminate();
 	}
 
@@ -43,11 +49,15 @@ public class ClientInstance implements Runnable{
 	 * shuts down the socket and lets the thread stop
 	 */
 	public void terminate(){
+		System.out.println("Client " + clientId + " disconnected.");
+		//Remove self from client list
+		ClientManager.getInstance().removeClient( clientId );
 		try {
 			socket.close();
 		}catch(Exception exception){
 			exception.printStackTrace();
 		}
+
 	}
 
 	/**
@@ -55,6 +65,10 @@ public class ClientInstance implements Runnable{
 	 * @return connection successful
 	 */
 	private boolean connectAndTest(){
+		if(clientId < 0){
+			System.err.println("Client created without valid client id");
+		}
+
 		try {
 			inputStream = new Scanner( socket.getInputStream() );
 			outputStream = new PrintWriter( socket.getOutputStream() );

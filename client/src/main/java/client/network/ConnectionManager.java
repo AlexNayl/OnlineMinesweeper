@@ -43,6 +43,7 @@ public class ConnectionManager implements Runnable{
 		}
 
 		System.out.println("Client-Server connection successfully established");
+		//TODO: Listen for commands
 
 		terminate();
 	}

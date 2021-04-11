@@ -3,28 +3,50 @@ package server.network;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Acts as a listen server and client manager when ran as a thread
+ * Is singleton
  */
 public class ClientManager implements Runnable{
+	private static ClientManager singletonInstance;
 
 	private final int MAX_CONNECTIONS = 50;
 
-	private int port;
-	private boolean running = true;
+	private int port = -1;
+	private boolean running = false;
 
 	private ServerSocket listener;
 	ExecutorService threadPool;
 
+	private Map<Integer, ClientInstance> activeClientMap;	//list of clients indexed by their client id
+	private int clientIndex = 0; //Gets indexed by one each time a client joins, used as each clients id
+
 	/**
-	 * Constructs a new ClientManager that listens on the specified port
-	 * @param port port to listen too when running
+	 * defeats outside instantiation, singleton only
 	 */
-	public ClientManager(int port){
+	private ClientManager(){
+		activeClientMap = new TreeMap<>();
+	}
+	/**
+	 * gets the singleton instance
+	 */
+	public static ClientManager getInstance(){
+		if(singletonInstance == null){
+			singletonInstance = new ClientManager();
+		}
+		return singletonInstance;
+	}
+
+	/**
+	 * sets the port, needed before its runnable
+	 * @param port port to listen on
+	 */
+	public void setPort(int port){
 		this.port = port;
 	}
 
@@ -32,7 +54,9 @@ public class ClientManager implements Runnable{
 	 * Intended to be ran as a thread only.
 	 */
 	public void run(){
+		running = true;
 
+		//Prep
 		try{
 			listener = new ServerSocket(port);
 			listener.setSoTimeout( 1000 );	//Forces accept() to stop every second to recheck if server still running
@@ -42,12 +66,20 @@ public class ClientManager implements Runnable{
 			System.err.println(exception.getMessage());
 			running = false;
 		}
+		if(port < 0){
+			System.err.println("Attempted to start ClientManager without proper port");
+			running = false;
+		}
 
+		//Main Loop
 		while(running){
 			try{
 				Socket newSocket = listener.accept();
-				ClientInstance newClient = new ClientInstance( newSocket );
+				ClientInstance newClient = new ClientInstance( newSocket , clientIndex);
+
 				threadPool.execute( newClient );
+				activeClientMap.put(clientIndex, newClient);
+				clientIndex++;
 			}catch( SocketTimeoutException exception ){
 				//Do nothing, frequent timeout expected as server needs to check if its still running
 			}catch(Exception exception){
@@ -55,7 +87,8 @@ public class ClientManager implements Runnable{
 			}
 		}
 
-		//If loop exits, intentional shutdown in progress
+		//Shutdown
+		running = false; //Just in case this didn't happen for some reason
 		try {
 			listener.close();
 		}catch(Exception exception){
@@ -72,5 +105,22 @@ public class ClientManager implements Runnable{
 		}catch(Exception exception){
 			exception.printStackTrace();
 		}
+	}
+
+	/**
+	 * Removes the client from the list, doesn't kill the client
+	 * Called by client on shutdown
+	 * @param clientId
+	 */
+	void removeClient(int clientId){
+		activeClientMap.remove( clientId );
+	}
+
+	/**
+	 * gets the current active client map, keys are client id integers, objects are clientInstances
+	 * @return clientMap
+	 */
+	public Map<Integer, ClientInstance> getActiveClientMap(){
+		return activeClientMap;
 	}
 }

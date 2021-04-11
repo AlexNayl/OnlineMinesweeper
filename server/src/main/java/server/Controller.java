@@ -9,7 +9,8 @@ public class Controller {
 	ClientManager clientManager;
 	Thread clientManagerThread;
 	public void initialize(){
-		clientManager = new ClientManager(port);
+		clientManager = ClientManager.getInstance();
+		clientManager.setPort( port );
 		clientManagerThread = new Thread(clientManager);
 		clientManagerThread.start();
 	}
