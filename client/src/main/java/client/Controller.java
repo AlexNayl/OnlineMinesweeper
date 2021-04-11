@@ -36,6 +36,11 @@ public class Controller {
 		Main.setConnectionManager( connectionManager );
 	}
 
+	public void handleSendTestCommand(){
+		connectionManager.send("TEST", "sampleString1 \n sampleString2");
+		System.out.println("Sent test command.");
+	}
+
 	public void easy(ActionEvent action) {
 		int demention = 10;
 		MineSweeper board = new MineSweeper(demention);

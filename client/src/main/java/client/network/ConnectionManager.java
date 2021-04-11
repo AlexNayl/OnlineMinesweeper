@@ -10,8 +10,11 @@ public class ConnectionManager implements Runnable{
 	private final String CHALLENGE = "!aiF!hFs3c785cS6";
 	private final String REPLY = "ky&skcHgSB@65x5q";
 
+	private final String END_TOKEN = "<END_DATA>";	//Used to mark the end of a set of data
+
 	private String ip = null;
-	int port;
+	private int port;
+	private boolean validConnection = false;
 
 	Socket socket;
 
@@ -42,8 +45,21 @@ public class ConnectionManager implements Runnable{
 			return;
 		}
 
-		System.out.println("Client-Server connection successfully established");
-		//TODO: Listen for commands
+		//System.out.println("Client-Server connection successfully established");
+		//Listens for commands
+		//Take and parse commands
+		while(inputStream.hasNextLine()){
+			String command = inputStream.nextLine();
+			String parameter = "";
+			String currentLine = inputStream.nextLine();
+			//Take new lines until we see the end_token
+			while(!currentLine.equals( END_TOKEN )){
+				parameter += currentLine + "\n";
+				currentLine = inputStream.nextLine();
+			}
+
+			//TODO: Send to controller
+		}
 
 		terminate();
 	}
@@ -105,7 +121,23 @@ public class ConnectionManager implements Runnable{
 			terminate();
 			return false;
 		}
+		validConnection = true;
 		return true;
+	}
+
+	/**
+	 * Sends the given command and parameter to the server
+	 * @param command Unique command identifier, so the server knows how to parse the associated parameter
+	 * @param parameter Data associated with command, any string (eg, for 'board' command it could be game board data)
+	 */
+	public void send(String command, String parameter){
+		if(!validConnection){
+			System.err.println("Attempted to send before a valid connection was made");
+		}
+		outputStream.println(command);
+		outputStream.println(parameter);
+		outputStream.println(END_TOKEN);
+		outputStream.flush();
 	}
 
 	/**

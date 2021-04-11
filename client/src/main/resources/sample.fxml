@@ -6,6 +6,7 @@
 <GridPane fx:controller="client.Controller"  xmlns:fx="http://javafx.com/fxml" alignment="center">
     <!--Debug stuff, remove before submission-->
     <Button text="DebugConnect" onAction="#handleConnect" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Button text="DebugSend" onAction="#handleSendTestCommand" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
 
     <!--This is where user will choose difficulty-->
     <Button fx:id="easy" text="Easy" GridPane.rowIndex="1" GridPane.columnIndex="0" onAction="#easy" />

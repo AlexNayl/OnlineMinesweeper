@@ -1,5 +1,7 @@
 package server.network;
 
+import server.Controller;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -12,6 +14,8 @@ public class ClientInstance implements Runnable{
 	//Used to verify we're talking to an actual game client
 	private final String CHALLENGE = "!aiF!hFs3c785cS6";
 	private final String REPLY = "ky&skcHgSB@65x5q";
+
+	private final String END_TOKEN = "<END_DATA>";	//Used to mark the end of a set of data
 
 	Socket socket = null;
 	int clientId = -1;
@@ -40,7 +44,20 @@ public class ClientInstance implements Runnable{
 			return;
 		}
 
-		//TODO: listen for commands
+		//Take and parse commands
+		while(inputStream.hasNextLine()){
+			String command = inputStream.nextLine();
+			String parameter = "";
+			String currentLine = inputStream.nextLine();
+			//Take new lines until we see the end_token
+			while(!currentLine.equals( END_TOKEN )){
+				parameter += currentLine + "\n";
+				currentLine = inputStream.nextLine();
+			}
+
+			//Send to controller
+			Controller.getInstance().handleReceiveCommand( clientId, command, parameter );
+		}
 
 		terminate();
 	}
