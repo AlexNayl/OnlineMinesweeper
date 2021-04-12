@@ -4,6 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -93,6 +94,18 @@ public class ClientManager implements Runnable{
 			listener.close();
 		}catch(Exception exception){
 			exception.printStackTrace();
+		}
+	}
+
+	/**
+	 * Sends the given command and parameter to all clients
+	 * @param command Unique command identifier, so the client knows how to parse the associated parameter
+	 * @param parameter Data associated with command, any string (eg, for 'board' command it could be game board data)
+	 */
+	public void sendAll(String command, String parameter){
+		Set<Integer> clientIDs = activeClientMap.keySet();
+		for(int i : clientIDs){
+			activeClientMap.get( i ).send( command, parameter );
 		}
 	}
 

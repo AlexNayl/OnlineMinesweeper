@@ -64,7 +64,6 @@ public class ConnectionManager implements Runnable{
 
 		//System.out.println("Client-Server connection successfully established");
 		//Listens for commands
-		//Take and parse commands
 		while(inputStream.hasNextLine()){
 			String command = inputStream.nextLine();
 			String parameter = "";
@@ -75,6 +74,8 @@ public class ConnectionManager implements Runnable{
 				currentLine = inputStream.nextLine();
 			}
 
+			System.out.println("Communication from server: " + command);
+			System.out.println( parameter );
 			//TODO: Send to controller
 		}
 
@@ -161,6 +162,7 @@ public class ConnectionManager implements Runnable{
 	 * shuts down the socket and lets the thread stop
 	 */
 	public void terminate(){
+		validConnection = false;
 		try {
 			socket.close();
 		}catch(Exception exception){

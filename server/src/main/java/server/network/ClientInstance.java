@@ -20,6 +20,8 @@ public class ClientInstance implements Runnable{
 	Socket socket = null;
 	int clientId = -1;
 
+	boolean validConnection = false;
+
 	Scanner inputStream;
 	PrintWriter outputStream;
 
@@ -63,9 +65,25 @@ public class ClientInstance implements Runnable{
 	}
 
 	/**
+	 * Sends the given command and parameter to the client
+	 * @param command Unique command identifier, so the clients knows how to parse the associated parameter
+	 * @param parameter Data associated with command, any string (eg, for 'board' command it could be game board data)
+	 */
+	public void send(String command, String parameter){
+		if(!validConnection){
+			System.err.println("Attempted to send before a valid connection was made");
+		}
+		outputStream.println(command);
+		outputStream.println(parameter);
+		outputStream.println(END_TOKEN);
+		outputStream.flush();
+	}
+
+	/**
 	 * shuts down the socket and lets the thread stop
 	 */
 	public void terminate(){
+		validConnection = false;	//Prevents other things from being sent
 		System.out.println("Client " + clientId + " disconnected.");
 		//Remove self from client list
 		ClientManager.getInstance().removeClient( clientId );
@@ -120,7 +138,7 @@ public class ClientInstance implements Runnable{
 			terminate();
 			return false;
 		}
-
+		validConnection = true;
 		return true;
 	}
 }

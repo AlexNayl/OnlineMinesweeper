@@ -2,6 +2,8 @@ package server;
 
 import server.network.ClientManager;
 
+import java.awt.event.ActionEvent;
+
 public class Controller {
 	private static Controller ownInstance;	//Singleton instance
 	private int port = 555;	//TODO: Remove hardcoding
@@ -47,6 +49,11 @@ public class Controller {
 	 */
 	public static Controller getInstance(){
 		return ownInstance;
+	}
+
+	public void handleSendTestCommand(){
+		clientManager.sendAll("TEST", "sampleString1 \n sampleString2");
+		System.out.println("Sent test command.");
 	}
 
 }
