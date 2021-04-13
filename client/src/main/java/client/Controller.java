@@ -279,6 +279,7 @@ public class Controller {
 		clear();
 
 		demention = 0;
+		board = null;
 
 		bombLabel.setVisible(false);
 		bombs.setVisible(false);
@@ -291,8 +292,6 @@ public class Controller {
 	public void clear() {
 
 		gridpane.getChildren().clear();
-
-		board = null;
 
 		for (int i = 0; i < demention +2; i++) {
 			for (int j = 0; j < demention + 2; j++) {
