@@ -52,7 +52,7 @@ public class MineSweeperLogic{
             for(int j = 0; j< field[0].length; j++) {
                 System.out.print(field[i][j]+ " , ");
             }
-            System.out.println();
+            System.out.println(field);
         }
     }
     public void setNumbers(){
@@ -80,7 +80,18 @@ public class MineSweeperLogic{
         }
         return results;
     }
-
+    public String toString(double[][] field){
+        String result ="";
+        for(int i=0; i< field.length; i++) {
+            for (int j = 0; j < field[0].length; j++) {
+                result += String.valueOf(field[i][j]) + ",";
+                //maybe add something here to make it easier to know when to do a new line
+            }
+            result+="-2,";
+        }
+        System.out.println("these are the results: "+result);
+        return result;
+    }
     public double getNum (int x, int y) {
         return field[x+1][y+1];
     }
