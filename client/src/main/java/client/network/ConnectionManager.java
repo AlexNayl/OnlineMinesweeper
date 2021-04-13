@@ -1,5 +1,7 @@
 package client.network;
 
+import client.Controller;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -167,15 +169,11 @@ public class ConnectionManager implements Runnable{
 
 		//Implement commands into this switch
 		switch(command){
-			case "TEST":
-				System.out.println("Test print");
-				System.out.println(parameter);
-				break;
 			case "SET_ID":
 				clientID = Integer.parseInt( parameter );
 				break;
 			default:
-				System.out.println("Invalid command " + command);
+				Controller.getInstance().handleReceiveCommand( command, parameter );
 		}
 
 		//TODO: on default send to controller

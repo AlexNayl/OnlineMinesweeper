@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class Controller {
+	private static Controller ownInstance;
 
 	@FXML
 	GridPane gridpane;
@@ -43,6 +44,13 @@ public class Controller {
 	int numBombs;
 	int [][] bombCoor;
 
+	public void initialize(){
+		ownInstance = this;	//Singleton instance
+	}
+
+	public static Controller getInstance(){
+		return ownInstance;
+	}
 
 	public void handleConnect(){
 		connectionManager = ConnectionManager.getInstance();
@@ -50,6 +58,24 @@ public class Controller {
 		connectionManagerThread = new Thread(connectionManager);
 		connectionManagerThread.start();
 		connectionManager.setThread( connectionManagerThread );
+	}
+
+	/**
+	 * Called when server receives a command from the client, executed on client thread
+	 * @param command String identifier for a specific type of message (eg, 'board' might be used to send a game board)
+	 * @param parameter Data that's optionally sent along with the command, can be any string excluding '<END_DATA>'
+	 */
+	public synchronized void handleReceiveCommand(String command, String parameter) {
+
+		//Implement commands into this switch
+		switch ( command ) {
+			case "TEST":
+				System.out.println("Test print");
+				System.out.println(parameter);
+				break;
+			default:
+				System.out.println( "Invalid command " + command );
+		}
 	}
 
 	public void handleSendTestCommand(){
