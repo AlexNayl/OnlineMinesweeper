@@ -116,7 +116,7 @@ public class Controller {
 		try {
 			FileWriter myWriter = new FileWriter("../server/src/main/resources/SavedScores.txt");
 			for (int i = 0; i < 10; i++){
-				myWriter.write(pritableScores[i][0]+":"+pritableScores[i][1]);
+				myWriter.write(pritableScores[i][0]+":"+pritableScores[i][1] + "\n");
 			}
 			myWriter.flush();
 			myWriter.close();
