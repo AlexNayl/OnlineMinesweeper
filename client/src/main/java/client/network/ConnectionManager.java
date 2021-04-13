@@ -18,6 +18,8 @@ public class ConnectionManager implements Runnable{
 	private int port;
 	private boolean validConnection = false;
 
+	private int clientID;
+
 	Socket socket;
 
 	Scanner inputStream;
@@ -73,10 +75,8 @@ public class ConnectionManager implements Runnable{
 				parameter += currentLine + "\n";
 				currentLine = inputStream.nextLine();
 			}
-
-			System.out.println("Communication from server: " + command);
-			System.out.println( parameter );
-			//TODO: Send to controller
+			parameter = parameter.trim();
+			handleReceiveCommand( command, parameter );
 		}
 
 		terminate();
@@ -159,6 +159,29 @@ public class ConnectionManager implements Runnable{
 	}
 
 	/**
+	 * Called when server receives a command from the client, executed on client thread
+	 * @param command String identifier for a specific type of message (eg, 'board' might be used to send a game board)
+	 * @param parameter Data that's optionally sent along with the command, can be any string excluding '<END_DATA>'
+	 */
+	private void handleReceiveCommand(String command, String parameter){
+
+		//Implement commands into this switch
+		switch(command){
+			case "TEST":
+				System.out.println("Test print");
+				System.out.println(parameter);
+				break;
+			case "SET_ID":
+				clientID = Integer.parseInt( parameter );
+				break;
+			default:
+				System.out.println("Invalid command " + command);
+		}
+
+		//TODO: on default send to controller
+	}
+
+	/**
 	 * shuts down the socket and lets the thread stop
 	 */
 	public void terminate(){
@@ -184,6 +207,14 @@ public class ConnectionManager implements Runnable{
 	 */
 	public Thread getThread(){
 		return selfThread;
+	}
+
+	/**
+	 * gets the client ID:
+	 * @return client ID
+	 */
+	public int getClientID(){
+		return clientID;
 	}
 
 }

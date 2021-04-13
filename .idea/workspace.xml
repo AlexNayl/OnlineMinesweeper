@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="96e82d00-082d-41e6-b6a6-d8da37882190" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/client/MineSweeper.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/client/MineSweeper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/server/MineSweeperLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/MineSweeperLogic.java" afterDir="false" />
     </list>
+=======
+    <list default="true" id="96e82d00-082d-41e6-b6a6-d8da37882190" name="Default Changelist" comment="" />
+>>>>>>> networking
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
