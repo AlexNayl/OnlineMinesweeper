@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class Controller {
+	private static Controller ownInstance;
 
 	@FXML
 	GridPane gridpane;
@@ -43,6 +44,13 @@ public class Controller {
 	int numBombs;
 	int [][] bombCoor;
 
+	public void initialize(){
+		ownInstance = this;	//Singleton instance
+	}
+
+	public static Controller getInstance(){
+		return ownInstance;
+	}
 
 	public void handleConnect(){
 		connectionManager = ConnectionManager.getInstance();
@@ -50,6 +58,81 @@ public class Controller {
 		connectionManagerThread = new Thread(connectionManager);
 		connectionManagerThread.start();
 		connectionManager.setThread( connectionManagerThread );
+	}
+
+	/**
+	 * Called when server receives a command from the server
+	 * @param command String identifier for a specific type of message (eg, 'board' might be used to send a game board)
+	 * @param parameter Data that's optionally sent along with the command, can be any string excluding '<END_DATA>'
+	 */
+	public synchronized void handleReceiveCommand(String command, String parameter) {
+
+		//Implement commands into this switch
+		switch ( command ) {
+			case "TEST":
+				System.out.println("Test print");
+				System.out.println(parameter);
+				break;
+			case "BOARD":
+
+				System.out.println("Recieved board: " + parameter);
+				//TODO: update the screen to the new board
+				board.field = MineSweeperLogic.toField( parameter, demention );
+				clear();
+
+				isPressed = new Boolean[demention + 2][demention + 2];
+
+				for(int i = 0; i < demention + 2; i++)
+					isPressed[0][i] = true;
+				for(int i = 0; i < demention + 2; i++)
+					isPressed[i][0] = true;
+				for(int i = 0; i < demention + 2; i++)
+					isPressed[11][i] = true;
+				for(int i = 0; i < demention + 2; i++)
+					isPressed[i][11] = true;
+
+				for (int i = 0; i < numBombs; i++){
+					int x = bombCoor[i][0];
+					int y = bombCoor[i][1];
+					isPressed[x][y] = true;
+				}
+
+				for (int i = 1; i < demention +2; i++) {
+					for (int j = 1; j < demention +2; j++) {
+						if (board.field[i][j] > 10.0){
+							isPressed[i][j] = true;
+						} else {
+							isPressed[i][j] = false;
+						}
+					}
+				}
+
+				for (int i = 1; i < demention +2; i++) {
+					for (int j = 1; j < demention +2; j++) {
+						if (isPressed[i][j] = true){
+							TextField numberClicked = new TextField();
+							numberClicked.setMaxSize(25,25);
+							numberClicked.setMinSize(25,25);
+							numberClicked.setEditable(false);
+							double num = board.field[i][j];
+							numberClicked.setText(Double.toString(num));
+							gridpane.add(numberClicked, i - 1, j - 1);
+						} else {
+							button.setOnAction(this::checkButton);
+							button.setMaxSize(25,25);
+							button.setMinSize(25,25);
+							gridpane.add(button, i-1, j-1);
+
+						}
+					}
+				}
+
+				board.printMap();
+
+				break;
+			default:
+				System.out.println( "Invalid command " + command );
+		}
 	}
 
 	public void handleSendTestCommand(){
@@ -78,6 +161,7 @@ public class Controller {
 
 	private void createBoard() {
 		board = new MineSweeperLogic(demention, numBombs);
+		board.printMap();
 		bombCoor = board.getBombCoor();
 		isPressed = new Boolean[demention + 2][demention + 2];
 
@@ -96,11 +180,9 @@ public class Controller {
 		for(int i = 0; i < demention + 2; i++)
 			isPressed[i][11] = true;
 
-		int[][] bombLocation = board.getBombCoor();
-
 		for (int i = 0; i < numBombs; i++){
-			int x = bombLocation[i][0];
-			int y = bombLocation[i][1];
+			int x = bombCoor[i][0];
+			int y = bombCoor[i][1];
 			isPressed[x][y] = true;
 		}
 
@@ -140,6 +222,7 @@ public class Controller {
 
 		double checkNum = board.getNum(y, x);
 
+		board.field[y][x] += 100;
 		isPressed[y+1][x+1] = true;
 
 		String num = Double.toString(checkNum);
@@ -161,7 +244,7 @@ public class Controller {
 			checkGetBomb();
 		}
 
-
+		ConnectionManager.getInstance().send( "BOARD", board.toString() );
 
 	}
 
@@ -242,6 +325,21 @@ public class Controller {
 	}
 
 	private void gameOver() {
+
+		clear();
+
+		demention = 0;
+
+		bombLabel.setVisible(false);
+		bombs.setVisible(false);
+
+		easy.setVisible(true);
+		medium.setVisible(true);
+		hard.setVisible(true);
+	}
+
+	public void clear() {
+
 		gridpane.getChildren().clear();
 
 		board = null;
@@ -252,14 +350,6 @@ public class Controller {
 			}
 		}
 
-		demention = 0;
-
-		bombLabel.setVisible(false);
-		bombs.setVisible(false);
-
-		easy.setVisible(true);
-		medium.setVisible(true);
-		hard.setVisible(true);
 	}
 
 

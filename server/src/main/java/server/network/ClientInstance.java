@@ -56,12 +56,27 @@ public class ClientInstance implements Runnable{
 				parameter += currentLine + "\n";
 				currentLine = inputStream.nextLine();
 			}
-
-			//Send to controller
-			Controller.getInstance().handleReceiveCommand( clientId, command, parameter );
+			handleReceiveCommand( command, parameter );
 		}
 
 		terminate();
+	}
+
+	/**
+	 * Network commands only, game commands go in controller
+	 * @param command String identifier for a specific type of message (eg, 'board' might be used to send a game board)
+	 * @param parameter Data that's optionally sent along with the command, can be any string excluding '<END_DATA>'
+	 */
+	private void handleReceiveCommand(String command, String parameter){
+
+		//Implement commands into this switch
+		switch(command){
+
+			default:
+				Controller.getInstance().handleReceiveCommand( clientId, command, parameter );
+		}
+
+
 	}
 
 	/**
@@ -139,6 +154,7 @@ public class ClientInstance implements Runnable{
 			return false;
 		}
 		validConnection = true;
+		send("SET_ID", Integer.toString( clientId ));
 		return true;
 	}
 }

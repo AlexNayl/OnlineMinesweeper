@@ -1,5 +1,7 @@
 package client.network;
 
+import client.Controller;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -17,6 +19,8 @@ public class ConnectionManager implements Runnable{
 	private String ip = null;
 	private int port;
 	private boolean validConnection = false;
+
+	private int clientID;
 
 	Socket socket;
 
@@ -73,10 +77,8 @@ public class ConnectionManager implements Runnable{
 				parameter += currentLine + "\n";
 				currentLine = inputStream.nextLine();
 			}
-
-			System.out.println("Communication from server: " + command);
-			System.out.println( parameter );
-			//TODO: Send to controller
+			parameter = parameter.trim();
+			handleReceiveCommand( command, parameter );
 		}
 
 		terminate();
@@ -159,6 +161,25 @@ public class ConnectionManager implements Runnable{
 	}
 
 	/**
+	 * Called when server receives a command from the client, executed on client thread
+	 * @param command String identifier for a specific type of message (eg, 'board' might be used to send a game board)
+	 * @param parameter Data that's optionally sent along with the command, can be any string excluding '<END_DATA>'
+	 */
+	private void handleReceiveCommand(String command, String parameter){
+
+		//Implement commands into this switch
+		switch(command){
+			case "SET_ID":
+				clientID = Integer.parseInt( parameter );
+				break;
+			default:
+				Controller.getInstance().handleReceiveCommand( command, parameter );
+		}
+
+		//TODO: on default send to controller
+	}
+
+	/**
 	 * shuts down the socket and lets the thread stop
 	 */
 	public void terminate(){
@@ -184,6 +205,14 @@ public class ConnectionManager implements Runnable{
 	 */
 	public Thread getThread(){
 		return selfThread;
+	}
+
+	/**
+	 * gets the client ID:
+	 * @return client ID
+	 */
+	public int getClientID(){
+		return clientID;
 	}
 
 }

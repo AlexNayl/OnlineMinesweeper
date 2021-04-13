@@ -17,6 +17,34 @@ public class MineSweeperLogic {
         loadBombs();
     };
 
+    public static double[][] toField(String parameter, int demention) {
+        double[][] field = new double[demention + 2][demention + 2];
+
+        for (int i = 0; i < demention + 3; i ++) {
+            for (int j = 0; j < demention + 3; j ++) {
+                field[i][j] = 0;
+            }
+        }
+
+        String[] numString = parameter.split(" ");
+        Double[] numVal = new Double[numString.length];
+
+        for (int i = 0; i < numString.length; i++) {
+            numVal[i] = Double.parseDouble(numString[i]);
+        }
+
+        int counter = 0;
+
+        for (int i = 1; i < demention + 2; i ++) {
+            for (int j = 1; j < demention + 2; j ++) {
+                field[i][j] = numVal[counter];
+                counter++;
+            }
+        }
+
+        return field;
+    }
+
     public void loadBombs() {
 
        for (int i = 0; i < numBombs; i++) {
@@ -84,7 +112,7 @@ public class MineSweeperLogic {
         }
         return results;
     }
-    public String toString(double[][] field){
+    public String toString(){
         String result ="";
         for(int i=0; i< field.length; i++) {
             for (int j = 0; j < field[0].length; j++) {
