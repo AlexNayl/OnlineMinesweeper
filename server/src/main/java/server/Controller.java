@@ -1,11 +1,7 @@
 package server;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import server.network.ClientManager;
 
 import java.io.*;
@@ -116,6 +112,24 @@ public class Controller {
 
 	}
 
+	private void updateFile() {
+		try {
+			FileWriter myWriter = new FileWriter("../server/src/main/resources/SavedScores.txt");
+			for (int i = 0; i < 10; i++){
+				myWriter.write(pritableScores[i][0]+":"+pritableScores[i][1]);
+			}
+			myWriter.flush();
+			myWriter.close();
+
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 
 	private void checkScorePositions(String name, int newScore) {
 		int temp;
@@ -132,6 +146,7 @@ public class Controller {
 			}
 		}
 		printToUI();
+		updateFile();
 	}
 
 

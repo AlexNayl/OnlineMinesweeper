@@ -4,7 +4,6 @@ public class MineSweeperLogic {
     int sizeRow;
     int sizeColunm;
     int numBombs;
-    int numBombsPlaced = 0;
     public double field[][];
     public int bombCoor[][];
 
@@ -19,7 +18,9 @@ public class MineSweeperLogic {
 
     public void loadBombs() {
 
-       for (int i = 0; i < numBombs; i++) {
+        int numBombsPlaced = 0;
+
+        while (numBombsPlaced < numBombs) {
            int x = 0;
            int y = 0;
 
@@ -28,22 +29,10 @@ public class MineSweeperLogic {
            while ((y < 1) || (y > 10))
                y = (int) (Math.random() * sizeRow);
 
-           for (int j = 0; j < i; j++){
-               if ((x == bombCoor[j][0]) && (y == bombCoor[i][1])) {
-                   while ((x < 1) || (x > 10))
-                       x = (int) (Math.random() * sizeRow);
-                   while ((y < 1) || (y > 10))
-                       y = (int) (Math.random() * sizeRow);
-               }
-           }
-
-           bombCoor[i][0] = x;
-           bombCoor[i][1] = y;
-
-
-
            if (field[x][y] != -1 && x > 0 && y > 0 && x < sizeRow && y < sizeColunm) {
                field[x][y] = -1;
+               bombCoor[numBombsPlaced][0] = x;
+               bombCoor[numBombsPlaced][1] = y;
                numBombsPlaced ++;
            }
        }
@@ -56,7 +45,7 @@ public class MineSweeperLogic {
             for(int j = 0; j< field[0].length; j++) {
                 System.out.print(field[i][j]+ " , ");
             }
-            System.out.println(field);
+            System.out.println();
         }
     }
 

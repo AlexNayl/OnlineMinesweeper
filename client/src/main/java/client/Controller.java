@@ -3,10 +3,10 @@ package client;
 import client.network.ConnectionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+
+import java.util.Optional;
 
 public class Controller {
 	private static Controller ownInstance;
@@ -31,8 +31,8 @@ public class Controller {
 
 
 	//TODO: remove hardcoding
-	private String ip = "127.0.0.1";
-	private int port = 16823;
+	private final String ip = "127.0.0.1";
+	private final int port = 16823;
 
 	ConnectionManager connectionManager;
 	Thread connectionManagerThread;
@@ -43,6 +43,9 @@ public class Controller {
 	Boolean [][] isPressed;
 	int numBombs;
 	int [][] bombCoor;
+	int bombsGotten = 0;
+	int whiteSpacePressed = 0;
+	String userName = "Jess";
 
 	public void initialize(){
 		ownInstance = this;	//Singleton instance
@@ -215,9 +218,17 @@ public class Controller {
 		if (checkNum == -1) {
 			field.setText("*");
 			gridpane.add(field, x, y);
-			//Pop Up
-			gameOver();
+
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+					"Oof, you hit a mine. Game Over.",
+					ButtonType.CLOSE);
+
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.CLOSE){
+				gameOver();
+			}
 		} else if (checkNum == 0) {
+			whiteSpacePressed++;
 			clearWhiteSpace(x,y);
 		} else if (checkNum > 0) {
 			field.setText(num);
@@ -281,7 +292,7 @@ public class Controller {
 				}
 
 				if (bombWon == true) {
-
+					bombsGotten++;
 					TextField field = new TextField();
 					field.setMaxSize(25, 25);
 					field.setMinSize(25, 25);
@@ -309,9 +320,14 @@ public class Controller {
 
 		if (bombs.getText().equals("0")) {
 
-			//Pop UP
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+					"Congratulations, you win!",
+					ButtonType.CLOSE);
 
-			gameOver();
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.CLOSE){
+				gameOver();
+			}
 		}
 	}
 
@@ -341,6 +357,15 @@ public class Controller {
 	}
 
 	private void calculateScore() {
-		connectionManager.send("SEND", "User:100");
+		int score;
+		score = 10 * bombsGotten;
+		score = score - (5*whiteSpacePressed);
+
+		if (score < 0)
+			score = 0;
+
+		String parameter = userName + ":" + score;
+
+		connectionManager.send("SEND", parameter);
 	}
 }
