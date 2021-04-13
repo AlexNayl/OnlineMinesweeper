@@ -10,7 +10,7 @@ import server.network.ClientManager;
 
 
 public class Controller {
-	private int port = 555;    //TODO: Remove hardcoding
+	private int port = 16823;    //TODO: Remove hardcoding
 
 
 

@@ -21,6 +21,7 @@
     <!--Debug stuff, remove before submission-->
     <Button text="DebugConnect" onAction="#handleConnect" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
     <Button text="DebugSend" onAction="#handleSendTestCommand" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Button fx:id="refresh" text="Refresh" GridPane.rowIndex="1" GridPane.columnIndex="5" onAction="#refresh" />
 
 
 </GridPane>

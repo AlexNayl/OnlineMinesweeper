@@ -32,7 +32,7 @@ public class Controller {
 
 	//TODO: remove hardcoding
 	private String ip = "127.0.0.1";
-	private int port = 555;
+	private int port = 16823;
 
 	ConnectionManager connectionManager;
 	Thread connectionManagerThread;
@@ -78,56 +78,6 @@ public class Controller {
 				System.out.println("Recieved board: " + parameter);
 				//TODO: update the screen to the new board
 				board.field = MineSweeperLogic.toField( parameter, demention );
-				clear();
-
-				isPressed = new Boolean[demention + 2][demention + 2];
-
-				for(int i = 0; i < demention + 2; i++)
-					isPressed[0][i] = true;
-				for(int i = 0; i < demention + 2; i++)
-					isPressed[i][0] = true;
-				for(int i = 0; i < demention + 2; i++)
-					isPressed[11][i] = true;
-				for(int i = 0; i < demention + 2; i++)
-					isPressed[i][11] = true;
-
-				for (int i = 0; i < numBombs; i++){
-					int x = bombCoor[i][0];
-					int y = bombCoor[i][1];
-					isPressed[x][y] = true;
-				}
-
-				for (int i = 1; i < demention +2; i++) {
-					for (int j = 1; j < demention +2; j++) {
-						if (board.field[i][j] > 10.0){
-							isPressed[i][j] = true;
-						} else {
-							isPressed[i][j] = false;
-						}
-					}
-				}
-
-				for (int i = 1; i < demention +2; i++) {
-					for (int j = 1; j < demention +2; j++) {
-						if (isPressed[i][j] = true){
-							TextField numberClicked = new TextField();
-							numberClicked.setMaxSize(25,25);
-							numberClicked.setMinSize(25,25);
-							numberClicked.setEditable(false);
-							double num = board.field[i][j];
-							numberClicked.setText(Double.toString(num));
-							gridpane.add(numberClicked, i - 1, j - 1);
-						} else {
-							button.setOnAction(this::checkButton);
-							button.setMaxSize(25,25);
-							button.setMinSize(25,25);
-							gridpane.add(button, i-1, j-1);
-
-						}
-					}
-				}
-
-				board.printMap();
 
 				break;
 			default:
@@ -352,6 +302,58 @@ public class Controller {
 
 	}
 
+	public void refresh(ActionEvent evernt) {
+		clear();
 
+		isPressed = new Boolean[demention + 2][demention + 2];
+
+		for(int i = 0; i < demention + 2; i++)
+			isPressed[0][i] = true;
+		for(int i = 0; i < demention + 2; i++)
+			isPressed[i][0] = true;
+		for(int i = 0; i < demention + 2; i++)
+			isPressed[11][i] = true;
+		for(int i = 0; i < demention + 2; i++)
+			isPressed[i][11] = true;
+
+		for (int i = 0; i < numBombs; i++){
+			int x = bombCoor[i][0];
+			int y = bombCoor[i][1];
+			isPressed[x][y] = true;
+		}
+
+		for (int i = 1; i < demention +1; i++) {
+			for (int j = 1; j < demention +1; j++) {
+				if (board.field[i][j] > 10.0){
+					isPressed[i][j] = true;
+				} else {
+					isPressed[i][j] = false;
+				}
+			}
+		}
+
+		for (int i = 1; i < demention +2; i++) {
+			for (int j = 1; j < demention +2; j++) {
+				if (isPressed[i][j] = true){
+					TextField numberClicked = new TextField();
+					numberClicked.setMaxSize(25,25);
+					numberClicked.setMinSize(25,25);
+					numberClicked.setEditable(false);
+					double num = board.field[i][j];
+					numberClicked.setText(Double.toString(num));
+					gridpane.add(numberClicked, i - 1, j - 1);
+				} else {
+					button.setOnAction(this::checkButton);
+					button.setMaxSize(25,25);
+					button.setMinSize(25,25);
+					gridpane.add(button, i-1, j-1);
+
+				}
+			}
+		}
+
+		board.printMap();
+
+	}
 
 }
