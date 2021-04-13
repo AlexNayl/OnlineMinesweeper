@@ -1,5 +1,7 @@
 package server.network;
 
+import server.Controller;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -13,7 +15,12 @@ public class ClientInstance implements Runnable{
 	private final String CHALLENGE = "!aiF!hFs3c785cS6";
 	private final String REPLY = "ky&skcHgSB@65x5q";
 
+	private final String END_TOKEN = "<END_DATA>";	//Used to mark the end of a set of data
+
 	Socket socket = null;
+	int clientId = -1;
+
+	boolean validConnection = false;
 
 	Scanner inputStream;
 	PrintWriter outputStream;
@@ -21,33 +28,85 @@ public class ClientInstance implements Runnable{
 	/**
 	 * Constructs a new ClientInstance bound to the specified socket.
 	 * @param socket
+	 * @param clientID unique integer given to each client
 	 */
-	ClientInstance( Socket socket){
+	ClientInstance( Socket socket, int clientID){
 		this.socket = socket;
+		this.clientId = clientID;
 	}
 
 	/**
 	 * Intended to be ran as a thread only.
 	 */
 	public void run(){
-		if(socket == null || !socket.isConnected()){
-			//No connection, do not run
-			System.err.println("Client attempted to run without valid socket.");
+		System.out.println("Client " + clientId + " connected.");
+		if(!connectAndTest()){
+			//Connection failed
 			terminate();
 			return;
+		}
+
+		//Take and parse commands
+		while(inputStream.hasNextLine()){
+			String command = inputStream.nextLine();
+			String parameter = "";
+			String currentLine = inputStream.nextLine();
+			//Take new lines until we see the end_token
+			while(!currentLine.equals( END_TOKEN )){
+				parameter += currentLine + "\n";
+				currentLine = inputStream.nextLine();
+			}
+
+			//Send to controller
+			Controller.getInstance().handleReceiveCommand( clientId, command, parameter );
+		}
+
+		terminate();
+	}
+
+	/**
+	 * Sends the given command and parameter to the client
+	 * @param command Unique command identifier, so the clients knows how to parse the associated parameter
+	 * @param parameter Data associated with command, any string (eg, for 'board' command it could be game board data)
+	 */
+	public void send(String command, String parameter){
+		if(!validConnection){
+			System.err.println("Attempted to send before a valid connection was made");
+		}
+		outputStream.println(command);
+		outputStream.println(parameter);
+		outputStream.println(END_TOKEN);
+		outputStream.flush();
+	}
+
+	/**
+	 * shuts down the socket and lets the thread stop
+	 */
+	public void terminate(){
+		validConnection = false;	//Prevents other things from being sent
+		System.out.println("Client " + clientId + " disconnected.");
+		//Remove self from client list
+		ClientManager.getInstance().removeClient( clientId );
+		try {
+			socket.close();
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Sets up input streams for new connection, then verifies game client using "Challenge, Response, Acknowledge"
+	 * @return connection successful
+	 */
+	private boolean connectAndTest(){
+		if(clientId < 0){
+			System.err.println("Client created without valid client id");
 		}
 
 		try {
 			inputStream = new Scanner( socket.getInputStream() );
 			outputStream = new PrintWriter( socket.getOutputStream() );
-		}catch(Exception exception) {
-			exception.printStackTrace();
-			terminate();
-			return;
-		}
-
-		//Verify we're talking to an actual game client
-		try {
 			socket.setSoTimeout( 500 );
 			String challenge = "";
 			if(inputStream.hasNext()) {
@@ -61,7 +120,7 @@ public class ClientInstance implements Runnable{
 				//Invalid challenge
 				System.err.println("Invalid challenge or no challenge issued");
 				terminate();
-				return;
+				return false;
 			}
 			//Check for acknowledgment
 			if(inputStream.hasNext()){
@@ -69,7 +128,7 @@ public class ClientInstance implements Runnable{
 			}else{
 				System.err.println("Failed to acknowledge");
 				terminate();
-				return;
+				return false;
 			}
 			socket.setSoTimeout( 0 );
 
@@ -77,23 +136,9 @@ public class ClientInstance implements Runnable{
 			//No response
 			exception.printStackTrace();
 			terminate();
-			return;
+			return false;
 		}
-
-		System.out.println("Server-Client connection successfully established");
-
-		terminate();
-
-	}
-
-	/**
-	 * shuts down the socket and lets the thread stop
-	 */
-	public void terminate(){
-		try {
-			socket.close();
-		}catch(Exception exception){
-			exception.printStackTrace();
-		}
+		validConnection = true;
+		return true;
 	}
 }

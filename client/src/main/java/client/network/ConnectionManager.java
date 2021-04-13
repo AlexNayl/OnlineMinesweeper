@@ -6,12 +6,17 @@ import java.util.Scanner;
 
 public class ConnectionManager implements Runnable{
 
+	private static ConnectionManager selfInstance;		//Singleton instance
+
 	//Used to verify we're talking to an actual game server
 	private final String CHALLENGE = "!aiF!hFs3c785cS6";
 	private final String REPLY = "ky&skcHgSB@65x5q";
 
+	private final String END_TOKEN = "<END_DATA>";	//Used to mark the end of a set of data
+
 	private String ip = null;
-	int port;
+	private int port;
+	private boolean validConnection = false;
 
 	Socket socket;
 
@@ -21,12 +26,27 @@ public class ConnectionManager implements Runnable{
 	//Stored in its own object for easy retrieval, doable since we expect only one thread;
 	Thread selfThread;
 
+	private ConnectionManager(){
+		//Forces singleton
+	}
+
 	/**
-	 * Constructs a new connection manager
+	 * gets the singleton instance of the connection manager
+	 * @return
+	 */
+	public static ConnectionManager getInstance(){
+		if(selfInstance == null){
+			selfInstance = new ConnectionManager();
+		}
+		return selfInstance;
+	}
+
+	/**
+	 * sets the port and ip to connect to
 	 * @param ip Address of server your connecting too
 	 * @param port Port of server your connecting too
 	 */
-	public ConnectionManager(String ip, int port){
+	public void setConnection(String ip, int port){
 		this.ip = ip;
 		this.port = port;
 	}
@@ -35,12 +55,45 @@ public class ConnectionManager implements Runnable{
 	 * Intended to be ran as a thread only.
 	 */
 	public void run(){
+		if (!connectAndTest()){
+			//Connection failed
+			//TODO: inform user connection failed
+			terminate();
+			return;
+		}
+
+		//System.out.println("Client-Server connection successfully established");
+		//Listens for commands
+		while(inputStream.hasNextLine()){
+			String command = inputStream.nextLine();
+			String parameter = "";
+			String currentLine = inputStream.nextLine();
+			//Take new lines until we see the end_token
+			while(!currentLine.equals( END_TOKEN )){
+				parameter += currentLine + "\n";
+				currentLine = inputStream.nextLine();
+			}
+
+			System.out.println("Communication from server: " + command);
+			System.out.println( parameter );
+			//TODO: Send to controller
+		}
+
+		terminate();
+	}
+
+	/**
+	 * Sets up input streams for new connection, then verifies game server using "Challenge, Response, Acknowledge"
+	 * @return connection successful
+	 */
+	private boolean connectAndTest(){
+
 		try{
 			socket = new Socket(ip, port);
 		}catch(Exception exception){
 			System.err.println("Failed to connect to the server.");
 			terminate();
-			return;
+			return false;
 		}
 
 		try{
@@ -49,7 +102,7 @@ public class ConnectionManager implements Runnable{
 		}catch(Exception exception){
 			exception.printStackTrace();
 			terminate();
-			return;
+			return false;
 		}
 
 		//Verify that we're talking to an actual game server, and not some random open port
@@ -66,13 +119,13 @@ public class ConnectionManager implements Runnable{
 				//no response
 				System.err.println("No response to challenge.");
 				terminate();
-				return;
+				return false;
 			}
 			if(!reply.equals( REPLY )){
 				//Wrong reply
 				System.err.println("Wrong reply.");
 				terminate();
-				return;
+				return false;
 			}
 
 			//One more send to acknowledge
@@ -84,18 +137,32 @@ public class ConnectionManager implements Runnable{
 			//No response
 			exception.printStackTrace();
 			terminate();
-			return;
+			return false;
 		}
+		validConnection = true;
+		return true;
+	}
 
-		System.out.println("Client-Server connection successfully established");
-
-		terminate();
+	/**
+	 * Sends the given command and parameter to the server
+	 * @param command Unique command identifier, so the server knows how to parse the associated parameter
+	 * @param parameter Data associated with command, any string (eg, for 'board' command it could be game board data)
+	 */
+	public void send(String command, String parameter){
+		if(!validConnection){
+			System.err.println("Attempted to send before a valid connection was made");
+		}
+		outputStream.println(command);
+		outputStream.println(parameter);
+		outputStream.println(END_TOKEN);
+		outputStream.flush();
 	}
 
 	/**
 	 * shuts down the socket and lets the thread stop
 	 */
 	public void terminate(){
+		validConnection = false;
 		try {
 			socket.close();
 		}catch(Exception exception){

@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="96e82d00-082d-41e6-b6a6-d8da37882190" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
@@ -21,6 +22,9 @@
       <change beforePath="$PROJECT_DIR$/server/src/main/java/server/logic.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/MineSweeperLogic.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/resources/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/sample.fxml" afterDir="false" />
     </list>
+=======
+    <list default="true" id="96e82d00-082d-41e6-b6a6-d8da37882190" name="Default Changelist" comment="" />
+>>>>>>> 27725b2bec20d9b8b05ce40f8d65f5b1ed0bf07e
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
