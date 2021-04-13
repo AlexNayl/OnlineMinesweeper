@@ -3,6 +3,7 @@ package server;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import server.network.ClientManager;
@@ -22,6 +23,13 @@ public class Controller {
 
 	@FXML
 	Button hard;
+
+	@FXML
+	Label bombLabel;
+
+	@FXML
+	TextField bombs;
+
 	private static Controller ownInstance;	//Singleton instance
 
 	ClientManager clientManager;
@@ -29,6 +37,7 @@ public class Controller {
 	private int demention;
 	MineSweeperLogic board;
 	Boolean [][] isPressed;
+	int numBombs;
 
 	public void initialize(){
 		ownInstance = this;
@@ -78,22 +87,25 @@ public class Controller {
 
 	public void easy(ActionEvent action) {
 		demention = 10;
-		createBoard(demention);
+		numBombs = 9;
+		createBoard();
 	}
 
 	public void medium(ActionEvent action) {
-		demention = 17;
-		createBoard(demention);
+		demention = 16;
+		numBombs = 40;
+		createBoard();
 	}
 
 	public void hard(ActionEvent action) {
 		demention = 25;
-		createBoard(demention);
+		numBombs = 99;
+		createBoard();
 
 	}
 
-	private void createBoard(int demention) {
-		board = new MineSweeperLogic(demention);
+	private void createBoard() {
+		board = new MineSweeperLogic(demention, numBombs);
 		isPressed = new Boolean[demention + 2][demention + 2];
 		for(int i = 0; i < demention + 2; i++)
 			isPressed[0][i] = true;
@@ -107,11 +119,15 @@ public class Controller {
 		medium.setVisible(false);
 		hard.setVisible(false);
 
-		createButtonChart(demention);
+		bombLabel.setVisible(true);
+		bombs.setText(Integer.toString(numBombs));
+		bombs.setVisible(true);
+
+		createButtonChart();
 
 	}
 
-	private void createButtonChart(int demention) {
+	private void createButtonChart() {
 		for (int i = 0; i < demention; i++) {
 			for (int j = 0; j < demention; j++) {
 				isPressed[i+1][j+1] = false;
@@ -136,8 +152,9 @@ public class Controller {
 
 		double checkNum = board.getNum(y, x);
 
+		isPressed[y+1][x+1] = true;
+
 		String num = Double.toString(checkNum);
-		System.out.println(num);
 		TextField field = new TextField();
 		field.setMaxSize(25,25);
 		field.setMinSize(25,25);
@@ -151,55 +168,69 @@ public class Controller {
 		} else if (checkNum == 0) {
 			field.setText(" ");
 			gridpane.add(field, x, y);
-			isPressed[x+1][y+1] = true;
-
 		} else if (checkNum > 0) {
 			field.setText(num);
 			gridpane.add(field, x, y);
-			isPressed[x+1][y+1] = true;
-			checkWin();
+			checkGetBomb();
 		}
 
 
 
 	}
 
-	private void checkWin() {
-		boolean winner = true;
-		boolean bombWinner = true;
+	private void checkGetBomb() {
+		boolean bombWon = true;
 		int[][] bombCoor = board.getBombCoor();
 
-		for(int i = 0; i < demention; i++) {
-			int x = bombCoor[i][0] + 1;
-			int y = bombCoor[i][1] + 1;
+		for (int z = 0; z < numBombs; z++) {
 
-			for(int k = x - 1; k < x + 1; k++) {
-				for (int j = y - 1; j < y + 1; j++) {
-					if (isPressed[k][j] != true) {
-						winner = false;
-						bombWinner = false;
+			int xCoor = bombCoor[z][0];
+			int yCoor = bombCoor[z][1];
+			isPressed[xCoor][yCoor] = true;
+
+			for(int i = 0; i < demention +2; i++) {
+				for(int j = 0; j < demention +2; j++) {
+					System.out.print(isPressed[i][j]);
+				}
+				System.out.println();
+			}
+
+			for (int i = xCoor - 1; i < xCoor + 2; i ++) {
+				for (int j = yCoor -1; j < yCoor + 2; j ++) {
+					if (isPressed[i][j] != true) {
+						bombWon = false;
 					}
 				}
 			}
-			if (bombWinner == true) {
-				TextField field = new TextField();
-				field.setMaxSize(25,25);
-				field.setMinSize(25,25);
-				field.setEditable(false);
-				field.setText("*");
-				gridpane.add(field, bombCoor[i][0], bombCoor[i][1]);
-				isPressed[x+1][y+1] = true;
+
+			if (bombWon == false) {
+				return;
 			}
+
+			System.out.println("Do I ever get here");
+
+			TextField field = new TextField();
+			field.setMaxSize(25,25);
+			field.setMinSize(25,25);
+			field.setEditable(false);
+			field.setText("*");
+			gridpane.add(field, xCoor - 1, yCoor - 1);
+
+			String numberOfBombs = bombs.getText();
+			int num = Integer.parseInt(numberOfBombs);
+			num--;
+			bombs.setText(Integer.toString(num));
+			checkWin();
 		}
 
-		if (winner == true) {
+
+	}
+
+	private void checkWin() {
+		if (bombs.getText().equals("0")) {
 			System.out.println("You winn");
 			gameOver();
-		} else {
-			return;
 		}
-
-
 	}
 
 	private void gameOver() {
@@ -214,6 +245,9 @@ public class Controller {
 		}
 
 		demention = 0;
+
+		bombLabel.setVisible(false);
+		bombs.setVisible(false);
 
 		easy.setVisible(true);
 		medium.setVisible(true);

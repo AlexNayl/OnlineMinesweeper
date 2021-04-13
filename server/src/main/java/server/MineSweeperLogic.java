@@ -10,22 +10,24 @@ public class MineSweeperLogic{
     public double field[][];
     public int bombCoor[][];
 
-    public MineSweeperLogic(int dem){
+    public MineSweeperLogic(int dem, int numBombs){
         this.sizeColunm = dem;
         this.sizeRow = dem;
-        this.numBombs = dem;
+        this.numBombs = numBombs;
         field = new double[(sizeRow+2)][(sizeColunm+2)];
         bombCoor = new int [dem][2];
-        loadBombs(numBombs);
+        loadBombs();
     };
 
-    public void loadBombs(int bombs) {
+    public void loadBombs() {
 
        for (int i = 0; i < numBombs; i++) {
            int x = 0;
            int y = 0;
-           x = (int) (Math.random() * sizeRow);
-           y = (int) (Math.random() * sizeColunm);
+           while ((x < 1) || (x > 10))
+               x = (int) (Math.random() * sizeRow);
+           while ((y < 1) || (y > 10))
+               y = (int) (Math.random() * sizeRow);
            bombCoor[i][0] = x;
            bombCoor[i][1] = y;
 
@@ -41,7 +43,6 @@ public class MineSweeperLogic{
            }
            System.out.println(" ");
        }
-       printMap();
        setNumbers();
     }
 
