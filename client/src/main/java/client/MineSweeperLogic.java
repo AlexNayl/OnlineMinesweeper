@@ -17,34 +17,6 @@ public class MineSweeperLogic {
         loadBombs();
     };
 
-    public static double[][] toField(String parameter, int demention) {
-        double[][] field = new double[demention + 2][demention + 2];
-
-        for (int i = 0; i < demention + 2; i ++) {
-            for (int j = 0; j < demention + 2; j ++) {
-                field[i][j] = 0;
-            }
-        }
-
-        String[] numString = parameter.split(",");
-        Double[] numVal = new Double[numString.length];
-
-        for (int i = 0; i < numString.length; i++) {
-            numVal[i] = Double.parseDouble(numString[i]);
-        }
-
-        int counter = 0;
-
-        for (int i = 1; i < demention + 1; i ++) {
-            for (int j = 1; j < demention + 1; j ++) {
-                field[i][j] = numVal[counter];
-                counter++;
-            }
-        }
-
-        return field;
-    }
-
     public void loadBombs() {
 
        for (int i = 0; i < numBombs; i++) {
@@ -70,10 +42,10 @@ public class MineSweeperLogic {
 
 
 
-               if (field[x][y] != -1 && x > 0 && y > 0 && x < sizeRow && y < sizeColunm) {
-                   field[x][y] = -1;
-                   numBombsPlaced ++;
-               }
+           if (field[x][y] != -1 && x > 0 && y > 0 && x < sizeRow && y < sizeColunm) {
+               field[x][y] = -1;
+               numBombsPlaced ++;
+           }
        }
        setNumbers();
     }
@@ -112,17 +84,7 @@ public class MineSweeperLogic {
         }
         return results;
     }
-    public String toString(){
-        String result ="";
-        for(int i=0; i< field.length; i++) {
-            for (int j = 0; j < field[0].length; j++) {
-                result += String.valueOf(field[i][j]) + ",";
-                //maybe add something here to make it easier to know when to do a new line
-            }
-            result+="\n";
-        }
-        return result;
-    }
+
     public double getNum (int x, int y) {
         return field[x+1][y+1];
     }

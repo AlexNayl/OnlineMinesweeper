@@ -73,12 +73,8 @@ public class Controller {
 				System.out.println("Test print");
 				System.out.println(parameter);
 				break;
-			case "BOARD":
-
-				System.out.println("Recieved board: " + parameter);
-				//TODO: update the screen to the new board
-				board.field = MineSweeperLogic.toField( parameter, demention );
-
+			case "SEND":
+				System.out.println("Score Sent");
 				break;
 			default:
 				System.out.println( "Invalid command " + command );
@@ -90,18 +86,37 @@ public class Controller {
 		System.out.println("Sent test command.");
 	}
 
+
+	/**
+	 * this button sets the demension of the minesweeper board
+	 * as well as the number of mines within the board
+	 *
+	 * @param action
+	 */
 	public void easy(ActionEvent action) {
 		demention = 10;
 		numBombs = 9;
 		createBoard();
 	}
 
+	/**
+	 * this button sets the demension of the minesweeper board
+	 * as well as the number of mines within the board
+	 *
+	 * @param action
+	 */
 	public void medium(ActionEvent action) {
 		demention = 16;
 		numBombs = 40;
 		createBoard();
 	}
 
+	/**
+	 * this button sets the demension of the minesweeper board
+	 * as well as the number of mines within the board
+	 *
+	 * @param action
+	 */
 	public void hard(ActionEvent action) {
 		demention = 25;
 		numBombs = 99;
@@ -109,6 +124,12 @@ public class Controller {
 
 	}
 
+	/**
+	 * Create board creates an instance of the Minesweeper board with the proper demensions
+	 * it will then get the location of the mines, as well as set up the boolean 2D array is Pressed
+	 * which records what button on the UI the client has clicked
+	 *
+	 */
 	private void createBoard() {
 		board = new MineSweeperLogic(demention, numBombs);
 		board.printMap();
@@ -148,6 +169,9 @@ public class Controller {
 
 	}
 
+	/**
+	 * createButtonChart creats and shows all the buttons that will be apart of the UI for the user to click
+	 */
 	private void createButtonChart() {
 		for (int i = 0; i < demention; i++) {
 			for (int j = 0; j < demention; j++) {
@@ -161,6 +185,13 @@ public class Controller {
 
 	}
 
+	/**
+	 * this button event determines what button was clicked and associated that with the minesweeper board and
+	 * the ispressed array. It will check what value in the minesweeper board corrisponds and change the button to
+	 * an uneditable textfeild that shows the user what the value is
+	 *
+	 * @param event
+	 */
 	private void checkButton(ActionEvent event) {
 		Button thisButton = (Button) event.getSource();
 
@@ -194,10 +225,13 @@ public class Controller {
 			checkGetBomb();
 		}
 
-		ConnectionManager.getInstance().send( "BOARD", board.toString() );
-
 	}
 
+	/**
+	 * clearWhiteSpace is a recusive method that clears all connented buttons that have the value 0
+	 * @param x
+	 * @param y
+	 */
 	private void clearWhiteSpace(int x, int y) {
 		isPressed[x+1][y+1] = true;
 		TextField field = new TextField();
@@ -224,6 +258,10 @@ public class Controller {
 		 */
 	}
 
+	/**
+	 * checkGetBomb looks at each bomb coordinate and checks to see if every button around it has been pressed
+	 * If so the bomb has been found and the client is close to winning
+	 */
 	private void checkGetBomb() {
 		boolean bombWon;
 
@@ -264,6 +302,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * checks to see if all the bombs have been found, if so the client wins and game resets
+	 */
 	private void checkWin() {
 
 		if (bombs.getText().equals("0")) {
@@ -274,9 +315,19 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * gameOver clears all the board information and return to main menu
+	 */
 	private void gameOver() {
+		calculateScore();
 
-		clear();
+		gridpane.getChildren().clear();
+
+		for (int i = 0; i < demention +2; i++) {
+			for (int j = 0; j < demention + 2; j++) {
+				isPressed[i][j] = false;
+			}
+		}
 
 		demention = 0;
 		board = null;
@@ -289,70 +340,7 @@ public class Controller {
 		hard.setVisible(true);
 	}
 
-	public void clear() {
-
-		gridpane.getChildren().clear();
-
-		for (int i = 0; i < demention +2; i++) {
-			for (int j = 0; j < demention + 2; j++) {
-				isPressed[i][j] = false;
-			}
-		}
-
+	private void calculateScore() {
+		connectionManager.send("SEND", "User:100");
 	}
-
-	public void refresh(ActionEvent evernt) {
-		clear();
-
-		isPressed = new Boolean[demention + 2][demention + 2];
-
-		for(int i = 0; i < demention + 2; i++)
-			isPressed[0][i] = true;
-		for(int i = 0; i < demention + 2; i++)
-			isPressed[i][0] = true;
-		for(int i = 0; i < demention + 2; i++)
-			isPressed[11][i] = true;
-		for(int i = 0; i < demention + 2; i++)
-			isPressed[i][11] = true;
-
-		for (int i = 0; i < numBombs; i++){
-			int x = bombCoor[i][0];
-			int y = bombCoor[i][1];
-			isPressed[x][y] = true;
-		}
-
-		for (int i = 1; i < demention +1; i++) {
-			for (int j = 1; j < demention +1; j++) {
-				if (board.field[i][j] > 10.0){
-					isPressed[i][j] = true;
-				} else {
-					isPressed[i][j] = false;
-				}
-			}
-		}
-
-		for (int i = 1; i < demention +2; i++) {
-			for (int j = 1; j < demention +2; j++) {
-				if (isPressed[i][j] = true){
-					TextField numberClicked = new TextField();
-					numberClicked.setMaxSize(25,25);
-					numberClicked.setMinSize(25,25);
-					numberClicked.setEditable(false);
-					double num = board.field[i][j];
-					numberClicked.setText(Double.toString(num));
-					gridpane.add(numberClicked, i - 1, j - 1);
-				} else {
-					button.setOnAction(this::checkButton);
-					button.setMaxSize(25,25);
-					button.setMinSize(25,25);
-					gridpane.add(button, i-1, j-1);
-
-				}
-			}
-		}
-
-		board.printMap();
-
-	}
-
 }
