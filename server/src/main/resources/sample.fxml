@@ -5,4 +5,14 @@
 <?import javafx.scene.control.Label?>
 <GridPane fx:controller="server.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+
+    <!--This is where user will choose difficulty-->
+    <Button fx:id="easy" text="Easy" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#easy" />
+    <Button fx:id="medium" text="Medium" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#medium" />
+    <Button fx:id="hard" text="Hard" GridPane.rowIndex="0" GridPane.columnIndex="2" onAction="#hard" />
+
+
+    <!--This is where the minesweeper layout will be initialized based on the number the user chooses-->
+    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" fx:id="gridpane" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
 </GridPane>

@@ -8,17 +8,7 @@ import javafx.scene.layout.GridPane;
 
 public class Controller {
 
-	@FXML
-	GridPane gridpane;
 
-	@FXML
-	Button easy;
-
-	@FXML
-	Button medium;
-
-	@FXML
-	Button hard;
 
 	//TODO: remove hardcoding
 	private String ip = "127.0.0.1";
@@ -36,29 +26,7 @@ public class Controller {
 		Main.setConnectionManager( connectionManager );
 	}
 
-	public void easy(ActionEvent action) {
-		int demention = 10;
-		MineSweeper board = new MineSweeper(demention);
-		easy.setVisible(false);
-		medium.setVisible(false);
-		hard.setVisible(false);
-	}
 
-	public void medium(ActionEvent action) {
-		int demention = 50;
-		MineSweeper board = new MineSweeper(demention);
-		easy.setVisible(false);
-		medium.setVisible(false);
-		hard.setVisible(false);
-	}
-
-	public void hard(ActionEvent action) {
-		int demention = 50;
-		MineSweeper board = new MineSweeper(demention);
-		easy.setVisible(false);
-		medium.setVisible(false);
-		hard.setVisible(false);
-	}
 
 
 }
