@@ -38,7 +38,9 @@ public class Controller {
 	MineSweeperLogic board;
 	Boolean [][] isPressed;
 	int numBombs;
+	int [][] bombCoor;
 
+	/*
 	public void initialize(){
 		ownInstance = this;
 
@@ -49,6 +51,8 @@ public class Controller {
 			clientManagerThread.start();
 		}
 	}
+
+	 */
 
 	/**
 	 * Called when server receives a command from the client, executed on client thread
@@ -106,6 +110,7 @@ public class Controller {
 
 	private void createBoard() {
 		board = new MineSweeperLogic(demention, numBombs);
+		bombCoor = board.getBombCoor();
 		isPressed = new Boolean[demention + 2][demention + 2];
 
 		for (int i = 0; i < demention +2; i++) {
@@ -185,11 +190,10 @@ public class Controller {
 		if (checkNum == -1) {
 			field.setText("*");
 			gridpane.add(field, x, y);
-
 			gameOver();
 		} else if (checkNum == 0) {
-			field.setText(" ");
-			gridpane.add(field, x, y);
+			clearWhiteSpace(x,y);
+			checkGetBomb();
 		} else if (checkNum > 0) {
 			field.setText(num);
 			gridpane.add(field, x, y);
@@ -200,51 +204,73 @@ public class Controller {
 
 	}
 
+	private void clearWhiteSpace(int x, int y) {
+		isPressed[x+1][y+1] = true;
+		TextField field = new TextField();
+		field.setMaxSize(25,25);
+		field.setMinSize(25,25);
+		field.setEditable(false);
+		double num = board.getNum(x,y);
+		if (num > 0)
+			field.setText(Double.toString(num));
+		else
+			field.setText(" ");
+
+		gridpane.add(field, x, y);
+
+		for (int i = x - 1; i < x + 2; i++) {
+			for (int j = y - 1; j < y + 2; j++) {
+				if (board.getNum(i,j) > -1) {
+					if ((i > 0) && (i < 10) && (j > 0) && (j < 10))
+						clearWhiteSpace(i,j);
+				}
+			}
+		}
+
+		//return;
+	}
+
 	private void checkGetBomb() {
-		boolean bombWon = true;
-		int[][] bombCoor = board.getBombCoor();
+		boolean bombWon;
 
 		for (int z = 0; z < numBombs; z++) {
+			bombWon = true;
 
 			int xCoor = bombCoor[z][0];
 			int yCoor = bombCoor[z][1];
 
-			for(int i = 0; i < demention +2; i++) {
-				for(int j = 0; j < demention +2; j++) {
-					System.out.print(isPressed[i][j]);
-				}
-				System.out.println();
-			}
-
-			for (int i = xCoor - 1; i < xCoor + 2; i ++) {
-				for (int j = yCoor -1; j < yCoor + 2; j ++) {
-					if (isPressed[i][j] != true) {
-						bombWon = false;
+			if ((xCoor > 0) && (yCoor > 0)) {
+				for (int i = xCoor - 1; i < xCoor + 2; i++) {
+					for (int j = yCoor - 1; j < yCoor + 2; j++) {
+						if (isPressed[i][j] != true) {
+							bombWon = false;
+						}
 					}
 				}
+
+
+				System.out.println("");
+
+				if (bombWon == true) {
+
+					TextField field = new TextField();
+					field.setMaxSize(25, 25);
+					field.setMinSize(25, 25);
+					field.setEditable(false);
+					field.setText("*");
+					gridpane.add(field, yCoor - 1, xCoor - 1);
+
+					String numberOfBombs = bombs.getText();
+					int num = Integer.parseInt(numberOfBombs);
+					num--;
+					bombs.setText(Integer.toString(num));
+					checkWin();
+
+					bombCoor[z][0] = -1;
+					bombCoor[z][0] = -1;
+				}
 			}
-
-			if (bombWon == false) {
-				return;
-			}
-
-			System.out.println("Do I ever get here");
-
-			TextField field = new TextField();
-			field.setMaxSize(25,25);
-			field.setMinSize(25,25);
-			field.setEditable(false);
-			field.setText("*");
-			gridpane.add(field, xCoor - 1, yCoor - 1);
-
-			String numberOfBombs = bombs.getText();
-			int num = Integer.parseInt(numberOfBombs);
-			num--;
-			bombs.setText(Integer.toString(num));
-			checkWin();
 		}
-
-
 	}
 
 	private void checkWin() {
@@ -273,7 +299,5 @@ public class Controller {
 		easy.setVisible(true);
 		medium.setVisible(true);
 		hard.setVisible(true);
-
-
 	}
 }
