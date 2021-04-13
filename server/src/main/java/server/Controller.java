@@ -136,13 +136,6 @@ public class Controller {
 			isPressed[x][y] = true;
 		}
 
-		for(int i = 0; i < demention +2; i++) {
-			for(int j = 0; j < demention +2; j++) {
-				System.out.print(isPressed[i][j]);
-			}
-			System.out.println();
-		}
-
 		easy.setVisible(false);
 		medium.setVisible(false);
 		hard.setVisible(false);
@@ -190,10 +183,10 @@ public class Controller {
 		if (checkNum == -1) {
 			field.setText("*");
 			gridpane.add(field, x, y);
+			//Pop Up
 			gameOver();
 		} else if (checkNum == 0) {
 			clearWhiteSpace(x,y);
-			checkGetBomb();
 		} else if (checkNum > 0) {
 			field.setText(num);
 			gridpane.add(field, x, y);
@@ -210,24 +203,24 @@ public class Controller {
 		field.setMaxSize(25,25);
 		field.setMinSize(25,25);
 		field.setEditable(false);
-		double num = board.getNum(x,y);
-		if (num > 0)
-			field.setText(Double.toString(num));
-		else
-			field.setText(" ");
-
+		field.setText(" ");
 		gridpane.add(field, x, y);
+		double checkNum;
 
+		/*
 		for (int i = x - 1; i < x + 2; i++) {
 			for (int j = y - 1; j < y + 2; j++) {
-				if (board.getNum(i,j) > -1) {
-					if ((i > 0) && (i < 10) && (j > 0) && (j < 10))
-						clearWhiteSpace(i,j);
+				checkNum = board.getNum(i,j);
+				//System.out.println(checkNum);
+				if ((checkNum == 0.0) && (i > -1) && (i < 11) && (j > -1) && (j < 11) && (isPressed[i + 1][j + 1] == false)) {
+				//	clearWhiteSpace(i, j);
 				}
 			}
 		}
 
-		//return;
+		return;
+
+		 */
 	}
 
 	private void checkGetBomb() {
@@ -247,9 +240,6 @@ public class Controller {
 						}
 					}
 				}
-
-
-				System.out.println("");
 
 				if (bombWon == true) {
 
@@ -274,8 +264,11 @@ public class Controller {
 	}
 
 	private void checkWin() {
+
 		if (bombs.getText().equals("0")) {
-			System.out.println("You winn");
+
+			//Pop UP
+
 			gameOver();
 		}
 	}

@@ -24,24 +24,30 @@ public class MineSweeperLogic{
        for (int i = 0; i < numBombs; i++) {
            int x = 0;
            int y = 0;
+
            while ((x < 1) || (x > 10))
                x = (int) (Math.random() * sizeRow);
            while ((y < 1) || (y > 10))
                y = (int) (Math.random() * sizeRow);
+
+           for (int j = 0; j < i; j++){
+               if ((x == bombCoor[j][0]) && (y == bombCoor[i][1])) {
+                   while ((x < 1) || (x > 10))
+                       x = (int) (Math.random() * sizeRow);
+                   while ((y < 1) || (y > 10))
+                       y = (int) (Math.random() * sizeRow);
+               }
+           }
+
            bombCoor[i][0] = x;
            bombCoor[i][1] = y;
+
+
 
                if (field[x][y] != -1 && x > 0 && y > 0 && x < sizeRow && y < sizeColunm) {
                    field[x][y] = -1;
                    numBombsPlaced ++;
                }
-       }
-
-       for (int i = 0; i < numBombs; i++) {
-           for (int j = 0; j < 2; j++){
-               System.out.print(" " + bombCoor[i][j]);
-           }
-           System.out.println(" ");
        }
        setNumbers();
     }
@@ -55,6 +61,7 @@ public class MineSweeperLogic{
             System.out.println(field);
         }
     }
+
     public void setNumbers(){
         for(int i=0; i< field.length; i++){
              for(int j=0; j< field[0].length; j++) {
@@ -65,7 +72,6 @@ public class MineSweeperLogic{
                 }
             }
         }
-        printMap();
     }
 
 
@@ -89,7 +95,6 @@ public class MineSweeperLogic{
             }
             result+="-2,";
         }
-        System.out.println("these are the results: "+result);
         return result;
     }
     public double getNum (int x, int y) {
