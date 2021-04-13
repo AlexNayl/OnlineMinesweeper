@@ -1,6 +1,6 @@
-package server;
+package client;
 
-public class MineSweeperLogic{
+public class MineSweeperLogic {
     int sizeRow;
     int sizeColunm;
     int numBombs;
