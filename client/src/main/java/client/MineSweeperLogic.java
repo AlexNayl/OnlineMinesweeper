@@ -84,7 +84,7 @@ public class MineSweeperLogic {
         }
         return results;
     }
-    public String toString(double[][] field){
+    public String toString(){
         String result ="";
         for(int i=0; i< field.length; i++) {
             for (int j = 0; j < field[0].length; j++) {

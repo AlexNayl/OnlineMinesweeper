@@ -61,7 +61,7 @@ public class Controller {
 	}
 
 	/**
-	 * Called when server receives a command from the client, executed on client thread
+	 * Called when server receives a command from the server
 	 * @param command String identifier for a specific type of message (eg, 'board' might be used to send a game board)
 	 * @param parameter Data that's optionally sent along with the command, can be any string excluding '<END_DATA>'
 	 */
@@ -72,6 +72,11 @@ public class Controller {
 			case "TEST":
 				System.out.println("Test print");
 				System.out.println(parameter);
+				break;
+			case "BOARD":
+				//board.field = MineSweeper.toField( parameter, demention );
+				System.out.println("Recieved board: " + parameter);
+				//TODO: update the screen to the new board
 				break;
 			default:
 				System.out.println( "Invalid command " + command );
@@ -187,7 +192,7 @@ public class Controller {
 			checkGetBomb();
 		}
 
-
+		ConnectionManager.getInstance().send( "BOARD", board.toString() );
 
 	}
 

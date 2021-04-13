@@ -44,6 +44,9 @@ public class Controller {
 				System.out.println("Test print from " + clientID);
 				System.out.println(parameter);
 				break;
+			case "BOARD":
+				clientManager.sendAll( "BOARD", parameter );
+				break;
 			default:
 				System.out.println("Invalid command " + command + " from client " + clientID);
 		}

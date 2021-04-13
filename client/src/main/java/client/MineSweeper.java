@@ -9,7 +9,7 @@ public class MineSweeper {
         this.numOfMines = demenitons;
     }
 
-    public String[][] toField(String numbers, int dementions) {
+    public static String[][] toField(String numbers, int dementions) {
         String[] rows = numbers.split("\n");
         String[][] field = new String[rows.length][];
         for (int i = 0; i < rows.length; i++) {
