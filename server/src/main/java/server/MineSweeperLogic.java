@@ -87,7 +87,7 @@ public class MineSweeperLogic{
                 result += String.valueOf(field[i][j]) + ",";
                 //maybe add something here to make it easier to know when to do a new line
             }
-            result+="-2,";
+            result+="\n";
         }
         System.out.println("these are the results: "+result);
         return result;
