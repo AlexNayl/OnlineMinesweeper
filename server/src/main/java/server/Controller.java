@@ -40,7 +40,6 @@ public class Controller {
 	int numBombs;
 	int [][] bombCoor;
 
-	/*
 	public void initialize(){
 		ownInstance = this;
 
@@ -51,8 +50,6 @@ public class Controller {
 			clientManagerThread.start();
 		}
 	}
-
-	 */
 
 	/**
 	 * Called when server receives a command from the client, executed on client thread
