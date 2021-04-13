@@ -1,19 +1,14 @@
 package server;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import server.network.ClientManager;
 
-import java.awt.event.ActionEvent;
 
 public class Controller {
-<<<<<<< HEAD
 	private int port = 555;    //TODO: Remove hardcoding
 
 	@FXML
@@ -27,24 +22,14 @@ public class Controller {
 
 	@FXML
 	Button hard;
-=======
 	private static Controller ownInstance;	//Singleton instance
-	private int port = 555;	//TODO: Remove hardcoding
->>>>>>> 27725b2bec20d9b8b05ce40f8d65f5b1ed0bf07e
-
 
 	ClientManager clientManager;
 	Thread clientManagerThread;
-<<<<<<< HEAD
 	private int demention;
 	MineSweeperLogic board;
 	Boolean [][] isPressed;
 
-	public void initialize() {
-		clientManager = new ClientManager(port);
-		clientManagerThread = new Thread(clientManager);
-		clientManagerThread.start();
-=======
 	public void initialize(){
 		ownInstance = this;
 
@@ -88,7 +73,6 @@ public class Controller {
 	public void handleSendTestCommand(){
 		clientManager.sendAll("TEST", "sampleString1 \n sampleString2");
 		System.out.println("Sent test command.");
->>>>>>> 27725b2bec20d9b8b05ce40f8d65f5b1ed0bf07e
 	}
 
 
