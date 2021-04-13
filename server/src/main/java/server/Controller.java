@@ -107,6 +107,13 @@ public class Controller {
 	private void createBoard() {
 		board = new MineSweeperLogic(demention, numBombs);
 		isPressed = new Boolean[demention + 2][demention + 2];
+
+		for (int i = 0; i < demention +2; i++) {
+			for (int j = 0; j < demention +2; j++) {
+				isPressed[i][j] = false;
+			}
+		}
+
 		for(int i = 0; i < demention + 2; i++)
 			isPressed[0][i] = true;
 		for(int i = 0; i < demention + 2; i++)
@@ -115,6 +122,22 @@ public class Controller {
 			isPressed[11][i] = true;
 		for(int i = 0; i < demention + 2; i++)
 			isPressed[i][11] = true;
+
+		int[][] bombLocation = board.getBombCoor();
+
+		for (int i = 0; i < numBombs; i++){
+			int x = bombLocation[i][0];
+			int y = bombLocation[i][1];
+			isPressed[x][y] = true;
+		}
+
+		for(int i = 0; i < demention +2; i++) {
+			for(int j = 0; j < demention +2; j++) {
+				System.out.print(isPressed[i][j]);
+			}
+			System.out.println();
+		}
+
 		easy.setVisible(false);
 		medium.setVisible(false);
 		hard.setVisible(false);
@@ -130,7 +153,6 @@ public class Controller {
 	private void createButtonChart() {
 		for (int i = 0; i < demention; i++) {
 			for (int j = 0; j < demention; j++) {
-				isPressed[i+1][j+1] = false;
 				Button button = new Button(" ");
 				button.setOnAction(this::checkButton);
 				button.setMaxSize(25,25);
@@ -186,7 +208,6 @@ public class Controller {
 
 			int xCoor = bombCoor[z][0];
 			int yCoor = bombCoor[z][1];
-			isPressed[xCoor][yCoor] = true;
 
 			for(int i = 0; i < demention +2; i++) {
 				for(int j = 0; j < demention +2; j++) {
