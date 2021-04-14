@@ -2,17 +2,17 @@ package client;
 
 public class MineSweeperLogic {
     int sizeRow;
-    int sizeColunm;
+    int sizeColumn;
     int numBombs;
     public int field[][];
     public int bombCoor[][];
 
     public MineSweeperLogic(int dem, int numBombs){
-        this.sizeColunm = dem;
+        this.sizeColumn = dem;
         this.sizeRow = dem;
         this.numBombs = numBombs;
-        field = new int[(sizeRow+2)][(sizeColunm+2)];
-        bombCoor = new int [dem][2];
+        field = new int[(sizeRow+2)][(sizeColumn +2)];
+        bombCoor = new int [numBombs][2];
         loadBombs();
     };
 
@@ -24,12 +24,12 @@ public class MineSweeperLogic {
            int x = 0;
            int y = 0;
 
-           while ((x < 1) || (x > 10))
+           while ((x < 1) || (x > sizeRow))
                x = (int) (Math.random() * sizeRow);
-           while ((y < 1) || (y > 10))
+           while ((y < 1) || (y > sizeColumn))
                y = (int) (Math.random() * sizeRow);
 
-           if (field[x][y] != -1 && x > 0 && y > 0 && x < sizeRow && y < sizeColunm) {
+           if (field[x][y] != -1 && x > 0 && y > 0 && x < sizeRow && y < sizeColumn) {
                field[x][y] = -1;
                bombCoor[numBombsPlaced][0] = x;
                bombCoor[numBombsPlaced][1] = y;

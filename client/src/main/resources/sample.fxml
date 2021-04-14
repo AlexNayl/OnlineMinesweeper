@@ -1,32 +1,30 @@
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.GridPane?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<GridPane fx:controller="client.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
+
+<GridPane fx:controller="client.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center" stylesheets="Client.css" hgap="10" vgap="10">
 
     <!--Login In field -->
-    <Label fx:id="ipLabel" text="IP Address: " GridPane.rowIndex="1" GridPane.columnIndex="1" />
-    <TextField fx:id="ipField" GridPane.rowIndex="1" GridPane.columnIndex="2" text = "127.0.0.1"/>
-    <Label fx:id="portLabel" text="Port: " GridPane.rowIndex="2" GridPane.columnIndex="1" />
-    <TextField fx:id="portField" GridPane.rowIndex="2" GridPane.columnIndex="2" text="16823" />
-    <Label fx:id="userLabel" text="Username: " GridPane.rowIndex="3" GridPane.columnIndex="1" />
-    <TextField fx:id="userNameField" GridPane.rowIndex="3" GridPane.columnIndex="2" />
-
-    <Button fx:id="login" GridPane.columnIndex="1" GridPane.rowIndex="4" text="Login" onAction="#login" />
+    <Label fx:id="ipLabel" text="IP Address: " GridPane.rowIndex="0" GridPane.columnIndex="0" />
+    <TextField fx:id="ipField" GridPane.rowIndex="0" GridPane.columnIndex="1" text = "127.0.0.1"/>
+    <Label fx:id="portLabel" text="Port: " GridPane.rowIndex="1" GridPane.columnIndex="0" />
+    <TextField fx:id="portField" GridPane.rowIndex="1" GridPane.columnIndex="1" text="16823" />
+    <Label fx:id="userLabel" text="Username: " GridPane.rowIndex="2" GridPane.columnIndex="0" />
+    <TextField fx:id="userNameField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    <Button fx:id="login" GridPane.columnIndex="1" GridPane.rowIndex="3" text="Login" onAction="#login" />
 
     <!--This is where user will choose difficulty-->
-    <Button fx:id="easy" text="Easy" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#easy" alignment="CENTER" visible="false" />
-    <Button fx:id="medium" text="Medium" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#medium" alignment="CENTER" visible="false" />
-    <Button fx:id="hard" text="Hard" GridPane.rowIndex="0" GridPane.columnIndex="2" onAction="#hard" alignment="CENTER" visible="false" />
+    <Button fx:id="easy" text="Easy" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#easy" visible="false" minWidth="100"/>
+    <Button fx:id="medium" text="Medium" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#medium" visible="false" GridPane.halignment="CENTER" minWidth="100"/>
+    <Button fx:id="hard" text="Hard" GridPane.rowIndex="0" GridPane.columnIndex="2" onAction="#hard" visible="false"  minWidth="100"/>
 
-    <Label fx:id="bombLabel" GridPane.rowIndex="2" GridPane.columnIndex="2" text="Bombs Left" visible="false"/>
-    <TextField fx:id="bombs" GridPane.columnIndex="2" GridPane.rowIndex="3" editable="false" visible="false" />
+    <Label fx:id="bombLabel" GridPane.rowIndex="3" GridPane.columnIndex="1" text="Bombs Left:" visible="false"/>
+    <TextField fx:id="bombs" GridPane.columnIndex="1" GridPane.rowIndex="4" editable="false" visible="false" />
 
 
 
     <!--This is where the minesweeper layout will be initialized based on the number the user chooses-->
-    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" fx:id="gridpane" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" fx:id="gridpane" GridPane.columnIndex="1" GridPane.rowIndex="2" gridLinesVisible="true"/>
 </GridPane>
 

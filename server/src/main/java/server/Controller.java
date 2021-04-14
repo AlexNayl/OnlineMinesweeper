@@ -31,7 +31,7 @@ public class Controller {
 	TextField tenth;
 
 
-	private int port = 16823;    //TODO: Remove hardcoding
+	private int port = 16823;
 	private static Controller ownInstance;	//Singleton instance
 	private String[][] pritableScores = new String[10][2];
 	private int[] scores = new int[10];
@@ -84,11 +84,6 @@ public class Controller {
 	 */
 	public static Controller getInstance(){
 		return ownInstance;
-	}
-
-	public void handleSendTestCommand(){
-		clientManager.sendAll("TEST", "sampleString1 \n sampleString2");
-		System.out.println("Sent test command.");
 	}
 
 	private void readInSavedScores() {

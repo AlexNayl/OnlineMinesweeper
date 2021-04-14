@@ -5,19 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <GridPane fx:controller="server.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" stylesheets="Server.css" >
 
-    <!-- debug stuff -->
-    <Button text="DebugSend" onAction="#handleSendTestCommand" GridPane.rowIndex="0" GridPane.columnIndex="10"/>
-
-    <TextField fx:id="first" GridPane.columnIndex="0" GridPane.rowIndex="0" editable="false" />
-    <TextField fx:id="second" GridPane.columnIndex="0" GridPane.rowIndex="1" editable="false" />
-    <TextField fx:id="third" GridPane.columnIndex="0" GridPane.rowIndex="2" editable="false" />
-    <TextField fx:id="fourth" GridPane.columnIndex="0" GridPane.rowIndex="3" editable="false" />
-    <TextField fx:id="fifth" GridPane.columnIndex="0" GridPane.rowIndex="4" editable="false" />
-    <TextField fx:id="sixth" GridPane.columnIndex="0" GridPane.rowIndex="5" editable="false" />
-    <TextField fx:id="seventh" GridPane.columnIndex="0" GridPane.rowIndex="6" editable="false" />
-    <TextField fx:id="eighth" GridPane.columnIndex="0" GridPane.rowIndex="7" editable="false" />
-    <TextField fx:id="ninth" GridPane.columnIndex="0" GridPane.rowIndex="8" editable="false" />
-    <TextField fx:id="tenth" GridPane.columnIndex="0" GridPane.rowIndex="9" editable="false" />
+    <Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="High Scores" GridPane.halignment="CENTER" />
+    <TextField fx:id="first" GridPane.columnIndex="0" GridPane.rowIndex="1" editable="false" />
+    <TextField fx:id="second" GridPane.columnIndex="0" GridPane.rowIndex="2" editable="false" />
+    <TextField fx:id="third" GridPane.columnIndex="0" GridPane.rowIndex="3" editable="false" />
+    <TextField fx:id="fourth" GridPane.columnIndex="0" GridPane.rowIndex="4" editable="false" />
+    <TextField fx:id="fifth" GridPane.columnIndex="0" GridPane.rowIndex="5" editable="false" />
+    <TextField fx:id="sixth" GridPane.columnIndex="0" GridPane.rowIndex="6" editable="false" />
+    <TextField fx:id="seventh" GridPane.columnIndex="0" GridPane.rowIndex="7" editable="false" />
+    <TextField fx:id="eighth" GridPane.columnIndex="0" GridPane.rowIndex="8" editable="false" />
+    <TextField fx:id="ninth" GridPane.columnIndex="0" GridPane.rowIndex="9" editable="false" />
+    <TextField fx:id="tenth" GridPane.columnIndex="0" GridPane.rowIndex="10" editable="false" />
 </GridPane>

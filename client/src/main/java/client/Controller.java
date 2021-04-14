@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-
 import java.util.Optional;
 
 public class Controller {
@@ -95,12 +94,6 @@ public class Controller {
 		}
 	}
 
-	public void handleSendTestCommand(){
-		connectionManager.send("TEST", "sampleString1 \n sampleString2");
-		System.out.println("Sent test command.");
-	}
-
-
 	/**
 	 * this button sets the demension of the minesweeper board
 	 * as well as the number of mines within the board
@@ -135,7 +128,6 @@ public class Controller {
 		demention = 25;
 		numBombs = 99;
 		createBoard();
-
 	}
 
 	/**
@@ -145,8 +137,17 @@ public class Controller {
 	 *
 	 */
 	private void createBoard() {
+
+		easy.setVisible(false);
+		medium.setVisible(false);
+		hard.setVisible(false);
+
+		bombLabel.setVisible(true);
+		bombs.setVisible(true);
+
+		bombs.setText(Integer.toString(numBombs));
+
 		board = new MineSweeperLogic(demention, numBombs);
-		//board.printMap();
 		bombCoor = board.getBombCoor();
 		isPressed = new Boolean[demention + 2][demention + 2];
 
@@ -171,16 +172,7 @@ public class Controller {
 			isPressed[x][y] = true;
 		}
 
-		easy.setVisible(false);
-		medium.setVisible(false);
-		hard.setVisible(false);
-
-		bombLabel.setVisible(true);
-		bombs.setText(Integer.toString(numBombs));
-		bombs.setVisible(true);
-
 		createButtonChart();
-
 	}
 
 	/**
@@ -191,12 +183,11 @@ public class Controller {
 			for (int j = 0; j < demention; j++) {
 				Button button = new Button(" ");
 				button.setOnAction(this::checkButton);
-				button.setMaxSize(25,25);
-				button.setMinSize(25,25);
+				button.setMaxSize(35,35);
+				button.setMinSize(35,35);
 				gridpane.add(button, i, j);
 			}
 		}
-
 	}
 
 	/**
@@ -212,8 +203,8 @@ public class Controller {
 		double xPos = thisButton.getLayoutX();
 		double yPos = thisButton.getLayoutY();
 
-		int x = (int) xPos / 25;
-		int y = (int) yPos / 25;
+		int x = (int) xPos / 35;
+		int y = (int) yPos / 35;
 
 		int checkNum = board.getNum(y, x);
 		System.out.println(x +", " + y + ": " + checkNum);
@@ -222,8 +213,8 @@ public class Controller {
 
 		String num = Integer.toString(checkNum);
 		TextField field = new TextField();
-		field.setMaxSize(25,25);
-		field.setMinSize(25,25);
+		field.setMaxSize(35,35);
+		field.setMinSize(35,35);
 		field.setEditable(false);
 
 		if (checkNum == -1) {
@@ -257,8 +248,8 @@ public class Controller {
 	private void clearWhiteSpace(int x, int y) {
 		isPressed[x+1][y+1] = true;
 		TextField field = new TextField();
-		field.setMaxSize(25,25);
-		field.setMinSize(25,25);
+		field.setMaxSize(35,35);
+		field.setMinSize(35,35);
 		field.setEditable(false);
 		field.setText(" ");
 		gridpane.add(field, x, y);
@@ -269,7 +260,7 @@ public class Controller {
 			for (int j = y - 1; j < y + 2; j++) {
 				checkNum = board.getNum(i,j);
 				//System.out.println(checkNum);
-				if ((checkNum == 0) && (i > -1) && (i < 11) && (j > -1) && (j < 11) && (isPressed[i + 1][j + 1] == false)) {
+				if ((checkNum == 0) && (i > -1) && (i < 12) && (j > -1) && (j < 12) && (isPressed[i+1][j+1] == false)) {
 					System.out.println(i + ", " + j + " would clear " + checkNum);
 					//clearWhiteSpace(i, j);
 				}
@@ -306,8 +297,8 @@ public class Controller {
 				if (bombWon == true) {
 					bombsGotten++;
 					TextField field = new TextField();
-					field.setMaxSize(25, 25);
-					field.setMinSize(25, 25);
+					field.setMaxSize(35, 35);
+					field.setMinSize(35, 35);
 					field.setEditable(false);
 					field.setText("*");
 					gridpane.add(field, yCoor - 1, xCoor - 1);
@@ -360,12 +351,13 @@ public class Controller {
 		demention = 0;
 		board = null;
 
-		bombLabel.setVisible(false);
-		bombs.setVisible(false);
-
 		easy.setVisible(true);
 		medium.setVisible(true);
 		hard.setVisible(true);
+
+		bombLabel.setVisible(false);
+		bombs.setVisible(false);
+
 	}
 
 	private void calculateScore() {
@@ -380,6 +372,7 @@ public class Controller {
 
 		connectionManager.send("SEND", parameter);
 	}
+
 
 	public void login(ActionEvent event) {
 		ip = ipField.getText();
