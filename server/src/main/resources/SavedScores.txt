@@ -1,1 +1,10 @@
-Alexie:90Jess:90Alex:90Jess:50test1:30test2:25test4:25test5:25test3:10Jess:0
+Alexie:90
+Jess:90
+Alex:90
+Jess:50
+test1:30
+test2:25
+test4:25
+test5:25
+test3:10
+Jessica:0

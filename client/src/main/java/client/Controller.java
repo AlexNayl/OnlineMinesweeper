@@ -12,6 +12,27 @@ public class Controller {
 	private static Controller ownInstance;
 
 	@FXML
+	Label ipLabel;
+
+	@FXML
+	Label portLabel;
+
+	@FXML
+	Label userLabel;
+
+	@FXML
+	TextField ipField;
+
+	@FXML
+	TextField portField;
+
+	@FXML
+	TextField userNameField;
+
+	@FXML
+	Button login;
+
+	@FXML
 	GridPane gridpane;
 
 	@FXML
@@ -31,12 +52,11 @@ public class Controller {
 
 
 	//TODO: remove hardcoding
-	private final String ip = "127.0.0.1";
-	private final int port = 16823;
+	private String ip = "127.0.0.1";
+	private int port = 16823;
 
 	ConnectionManager connectionManager;
 	Thread connectionManagerThread;
-	private Button button;
 
 	private int demention;
 	MineSweeperLogic board;
@@ -53,14 +73,6 @@ public class Controller {
 
 	public static Controller getInstance(){
 		return ownInstance;
-	}
-
-	public void handleConnect(){
-		connectionManager = ConnectionManager.getInstance();
-		connectionManager.setConnection( ip, port );
-		connectionManagerThread = new Thread(connectionManager);
-		connectionManagerThread.start();
-		connectionManager.setThread( connectionManagerThread );
 	}
 
 	/**
@@ -367,5 +379,31 @@ public class Controller {
 		String parameter = userName + ":" + score;
 
 		connectionManager.send("SEND", parameter);
+	}
+
+	public void login(ActionEvent event) {
+		ip = ipField.getText();
+		String portString = portField.getText();
+		port = Integer.parseInt(portString);
+		userName = userNameField.getText();
+
+		connectionManager = ConnectionManager.getInstance();
+		connectionManager.setConnection( ip, port );
+		connectionManagerThread = new Thread(connectionManager);
+		connectionManagerThread.start();
+		connectionManager.setThread( connectionManagerThread );
+
+		ipLabel.setVisible(false);
+		portLabel.setVisible(false);
+		userLabel.setVisible(false);
+		ipField.setVisible(false);
+		portField.setVisible(false);
+		userNameField.setVisible(false);
+		login.setVisible(false);
+
+		easy.setVisible(true);
+		medium.setVisible(true);
+		hard.setVisible(true);
+
 	}
 }
