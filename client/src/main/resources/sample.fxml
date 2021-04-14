@@ -8,9 +8,9 @@
 
     <!--Login In field -->
     <Label fx:id="ipLabel" text="IP Address: " GridPane.rowIndex="1" GridPane.columnIndex="1" />
-    <TextField fx:id="ipField" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <TextField fx:id="ipField" GridPane.rowIndex="1" GridPane.columnIndex="2" text = "127.0.0.1"/>
     <Label fx:id="portLabel" text="Port: " GridPane.rowIndex="2" GridPane.columnIndex="1" />
-    <TextField fx:id="portField" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+    <TextField fx:id="portField" GridPane.rowIndex="2" GridPane.columnIndex="2" text="16823" />
     <Label fx:id="userLabel" text="Username: " GridPane.rowIndex="3" GridPane.columnIndex="1" />
     <TextField fx:id="userNameField" GridPane.rowIndex="3" GridPane.columnIndex="2" />
 
@@ -28,8 +28,5 @@
 
     <!--This is where the minesweeper layout will be initialized based on the number the user chooses-->
     <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" fx:id="gridpane" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-    <!--Debug stuff, remove before submission-->
-    <Button text="DebugSend" onAction="#handleSendTestCommand" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 </GridPane>
 

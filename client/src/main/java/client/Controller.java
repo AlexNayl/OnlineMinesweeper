@@ -51,7 +51,6 @@ public class Controller {
 	TextField bombs;
 
 
-	//TODO: remove hardcoding
 	private String ip = "127.0.0.1";
 	private int port = 16823;
 
