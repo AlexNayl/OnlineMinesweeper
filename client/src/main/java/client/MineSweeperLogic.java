@@ -4,14 +4,14 @@ public class MineSweeperLogic {
     int sizeRow;
     int sizeColunm;
     int numBombs;
-    public double field[][];
+    public int field[][];
     public int bombCoor[][];
 
     public MineSweeperLogic(int dem, int numBombs){
         this.sizeColunm = dem;
         this.sizeRow = dem;
         this.numBombs = numBombs;
-        field = new double[(sizeRow+2)][(sizeColunm+2)];
+        field = new int[(sizeRow+2)][(sizeColunm+2)];
         bombCoor = new int [dem][2];
         loadBombs();
     };
@@ -74,7 +74,7 @@ public class MineSweeperLogic {
         return results;
     }
 
-    public double getNum (int x, int y) {
+    public int getNum (int x, int y) {
         return field[x+1][y+1];
     }
 

@@ -146,7 +146,7 @@ public class Controller {
 	 */
 	private void createBoard() {
 		board = new MineSweeperLogic(demention, numBombs);
-		board.printMap();
+		//board.printMap();
 		bombCoor = board.getBombCoor();
 		isPressed = new Boolean[demention + 2][demention + 2];
 
@@ -215,12 +215,12 @@ public class Controller {
 		int x = (int) xPos / 25;
 		int y = (int) yPos / 25;
 
-		double checkNum = board.getNum(y, x);
+		int checkNum = board.getNum(y, x);
+		System.out.println(x +", " + y + ": " + checkNum);
 
-		board.field[y][x] += 100;
 		isPressed[y+1][x+1] = true;
 
-		String num = Double.toString(checkNum);
+		String num = Integer.toString(checkNum);
 		TextField field = new TextField();
 		field.setMaxSize(25,25);
 		field.setMinSize(25,25);
@@ -262,22 +262,23 @@ public class Controller {
 		field.setEditable(false);
 		field.setText(" ");
 		gridpane.add(field, x, y);
-		double checkNum;
+		int checkNum;
 
-		/*
+		//System.out.println(x + ", " + y);
 		for (int i = x - 1; i < x + 2; i++) {
 			for (int j = y - 1; j < y + 2; j++) {
 				checkNum = board.getNum(i,j);
 				//System.out.println(checkNum);
-				if ((checkNum == 0.0) && (i > -1) && (i < 11) && (j > -1) && (j < 11) && (isPressed[i + 1][j + 1] == false)) {
-				//	clearWhiteSpace(i, j);
+				if ((checkNum == 0) && (i > -1) && (i < 11) && (j > -1) && (j < 11) && (isPressed[i + 1][j + 1] == false)) {
+					System.out.println(i + ", " + j + " would clear " + checkNum);
+					//clearWhiteSpace(i, j);
 				}
 			}
 		}
 
 		return;
 
-		 */
+
 	}
 
 	/**
