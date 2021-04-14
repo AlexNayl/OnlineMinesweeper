@@ -86,6 +86,10 @@ public class Controller {
 		return ownInstance;
 	}
 
+	/**
+	 * This function reads in the file that is connected to the server to get all saved highscores
+	 * and puts them into their designated variables
+	 */
 	private void readInSavedScores() {
 
 		try {
@@ -107,6 +111,9 @@ public class Controller {
 
 	}
 
+	/**
+	 * updateFile will re-write the file with the new top scores
+	 */
 	private void updateFile() {
 		try {
 			FileWriter myWriter = new FileWriter("../server/src/main/resources/SavedScores.txt");
@@ -126,6 +133,12 @@ public class Controller {
 	}
 
 
+	/**
+	 * checkScore will take a new username and connected score and check to see if the score is higher than
+	 * any of the highscores. If it is it will bump all lower scores down one
+	 * @param name is the username
+	 * @param newScore is the score being compared
+	 */
 	private void checkScorePositions(String name, int newScore) {
 		int temp;
 		String nameTemp;
@@ -134,7 +147,7 @@ public class Controller {
 				temp = scores[i];
 				nameTemp = pritableScores[i][0];
 				pritableScores[i][0] = name;
-				pritableScores[i][1] = Integer.toString(scores[i]);
+				pritableScores[i][1] = Integer.toString(newScore);
 				scores[i] = newScore;
 				newScore = temp;
 				name = nameTemp;
@@ -144,7 +157,9 @@ public class Controller {
 		updateFile();
 	}
 
-
+	/**
+	 * this function prints the top 10 scores to the UI
+	 */
 	private void printToUI() {
 		first.setText(pritableScores[0][0] + " " + pritableScores[0][1]);
 		second.setText(pritableScores[1][0]+ " " + pritableScores[1][1]);

@@ -1,5 +1,9 @@
 package client;
 
+/**
+ * The minesweeper class keeps instances of an induvidual minesweeper game
+ * this includes the board, location of bombs, and creating them
+ */
 public class MineSweeperLogic {
     int sizeRow;
     int sizeColumn;
@@ -7,6 +11,11 @@ public class MineSweeperLogic {
     public int field[][];
     public int bombCoor[][];
 
+    /**
+     * This is the constructor, creates a new instance
+     * @param dem is the demention of the game board
+     * @param numBombs is the number of bombs that should be loaded
+     */
     public MineSweeperLogic(int dem, int numBombs){
         this.sizeColumn = dem;
         this.sizeRow = dem;
@@ -14,8 +23,12 @@ public class MineSweeperLogic {
         field = new int[(sizeRow+2)][(sizeColumn +2)];
         bombCoor = new int [numBombs][2];
         loadBombs();
-    };
+    }
 
+    /**
+     * Uses an algorithm to spawn random coordinated for the location of the bombs on the board
+     * There is checks to make sure the bomb fits on the board and will not over lap a previous bomb
+     */
     public void loadBombs() {
 
         int numBombsPlaced = 0;
@@ -39,8 +52,10 @@ public class MineSweeperLogic {
        setNumbers();
     }
 
+    /**
+     * This is a test function used to print out all values of the board
+     */
     public void printMap(){
-
         for(int i = 0; i<field.length; i++){
             for(int j = 0; j< field[0].length; j++) {
                 System.out.print(field[i][j]+ " , ");
@@ -49,6 +64,10 @@ public class MineSweeperLogic {
         }
     }
 
+    /**
+     * SetNumbers iterate through each spot on the board to see if it is a bomb
+     * If it is not a bomb it goes to center check
+     */
     public void setNumbers(){
         for(int i=0; i< field.length; i++){
              for(int j=0; j< field[0].length; j++) {
@@ -61,7 +80,13 @@ public class MineSweeperLogic {
         }
     }
 
-
+    /**
+     * centerCheck takes a space that is not a bomb and check to see if there are any bombs around it
+     * It adds the number of bombs and puts that value on the board
+      * @param X the x coordinate
+     * @param Y the y coordinate
+     * @return the number of bombs
+     */
     public int centerCheck(int X , int Y) {      ///Note x, y are actually revered in this function
         int results = 0;
         for(int i = X-1; i<X+2; i++) {
@@ -74,10 +99,20 @@ public class MineSweeperLogic {
         return results;
     }
 
+    /**
+     * getter function for the given coordinates
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the value at given coordinates
+     */
     public int getNum (int x, int y) {
         return field[x+1][y+1];
     }
 
+    /**
+     * gets the array of bomb coordinates
+     * @return the 2D array of bomb coordinates
+     */
     public int[][] getBombCoor() {
         return bombCoor;
     }

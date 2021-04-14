@@ -25,6 +25,6 @@
 
 
     <!--This is where the minesweeper layout will be initialized based on the number the user chooses-->
-    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" fx:id="gridpane" GridPane.columnIndex="1" GridPane.rowIndex="2" gridLinesVisible="true"/>
+    <GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" fx:id="gridpane" GridPane.columnIndex="1" GridPane.rowIndex="1" gridLinesVisible="true"/>
 </GridPane>
 

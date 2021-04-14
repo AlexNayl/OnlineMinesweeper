@@ -4,7 +4,10 @@ import client.network.ConnectionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+
+import javafx.scene.image.ImageView;
 import java.util.Optional;
 
 public class Controller {
@@ -171,12 +174,11 @@ public class Controller {
 			int y = bombCoor[i][1];
 			isPressed[x][y] = true;
 		}
-
 		createButtonChart();
 	}
 
 	/**
-	 * createButtonChart creats and shows all the buttons that will be apart of the UI for the user to click
+	 * createButtonChart creates and shows all the buttons that will be apart of the UI for the user to click
 	 */
 	private void createButtonChart() {
 		for (int i = 0; i < demention; i++) {
@@ -218,8 +220,12 @@ public class Controller {
 		field.setEditable(false);
 
 		if (checkNum == -1) {
-			field.setText("*");
-			gridpane.add(field, x, y);
+			Image image = new Image("flag.jpg");
+			ImageView flag = new ImageView();
+			flag.setImage(image);
+			flag.setFitWidth(35);
+			flag.setFitHeight(35);
+			gridpane.add(flag, x, y);
 
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
 					"Oof, you hit a mine. Game Over.",
@@ -242,8 +248,9 @@ public class Controller {
 
 	/**
 	 * clearWhiteSpace is a recusive method that clears all connented buttons that have the value 0
-	 * @param x
-	 * @param y
+	 *
+	 * @param x is x coordinate
+	 * @param y is y coordinate
 	 */
 	private void clearWhiteSpace(int x, int y) {
 		isPressed[x+1][y+1] = true;
@@ -296,12 +303,13 @@ public class Controller {
 
 				if (bombWon == true) {
 					bombsGotten++;
-					TextField field = new TextField();
-					field.setMaxSize(35, 35);
-					field.setMinSize(35, 35);
-					field.setEditable(false);
-					field.setText("*");
-					gridpane.add(field, yCoor - 1, xCoor - 1);
+
+					Image image = new Image("flag.jpg");
+					ImageView flag = new ImageView();
+					flag.setImage(image);
+					flag.setFitWidth(35);
+					flag.setFitHeight(35);
+					gridpane.add(flag, yCoor - 1, xCoor - 1);
 
 					String numberOfBombs = bombs.getText();
 					int num = Integer.parseInt(numberOfBombs);
@@ -335,7 +343,7 @@ public class Controller {
 	}
 
 	/**
-	 * gameOver clears all the board information and return to main menu
+	 * gameOver clears all the board information and return to difficulty menu
 	 */
 	private void gameOver() {
 		calculateScore();
@@ -360,20 +368,33 @@ public class Controller {
 
 	}
 
+	/**
+	 * caclculate score is called after every finished game
+	 * it calculates the player score based on how many bombs they succesfully found
+	 * and how many whitespaces they pressed to find them
+	 * It then sends the information to the server with the username
+	 */
 	private void calculateScore() {
 		int score;
 		score = 10 * bombsGotten;
-		score = score - (5*whiteSpacePressed);
+		score = score - (whiteSpacePressed);
 
 		if (score < 0)
 			score = 0;
 
-		String parameter = userName + ":" + score;
+		String stringScore = Integer.toString(score);
+
+		String parameter = userName + ":" + stringScore;
 
 		connectionManager.send("SEND", parameter);
 	}
 
 
+	/**
+	 * the login button takes and sets the IP, port, and username
+	 * This begins the client connection to the server as well as setting up the difficulty menu option
+	 * @param event
+	 */
 	public void login(ActionEvent event) {
 		ip = ipField.getText();
 		String portString = portField.getText();
