@@ -25,4 +25,4 @@ application.
 
 
 Set up/ Running 
-To set up the program all you need to do is clone the repository from “https://github.com/AlexNayl/SystemsGroupProject.git” open the project and build/ run it through gradle. If you have gradle already installed ally you have to do it configure the package to your java file and run it. 
+To set up the program all you need to do is clone the repository from “https://github.com/AlexNayl/OnlineMinesweeper” open the project and build/ run it through gradle. If you have gradle already installed ally you have to do it configure the package to your java file and run it. 
